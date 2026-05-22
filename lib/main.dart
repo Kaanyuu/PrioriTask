@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'task.dart';
+import 'models/task.dart';
+import 'widgets/task_card.dart';
 
 void main() {
   runApp(const MyApp());
@@ -79,6 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
 
                     Text(
+                      //to be changed
                       '$_counter',
                       style: Theme.of(context)
                           .textTheme
@@ -93,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
 
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-
+      //To be changed
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
