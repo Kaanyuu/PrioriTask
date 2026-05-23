@@ -170,7 +170,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
 
-
             Expanded(
               child: tasks.isEmpty
                   ? const Center(child: Text('No tasks yet. Tap + to add one!'))
@@ -192,12 +191,48 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
 
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      //To be changed
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addTaskPrompt,
-        tooltip: 'Add Task',
-        child: const Icon(Icons.add),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: SizedBox(
+        height: 60,
+        width: 60,
+        child: FloatingActionButton(
+          onPressed: _addTaskPrompt,
+          tooltip: 'Add Task',
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add, size: 30), // Bigger icon to match
+        ),
+      ),
+
+      //Bottom Navigation Bar
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 10.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.list),
+              onPressed: () {},
+              tooltip: 'Tasks',
+            ),
+            IconButton(
+              icon: const Icon(Icons.calendar_month),
+              onPressed: () {},
+              tooltip: 'Calendar',
+            ),
+            const SizedBox(width: 40),
+            IconButton(
+              icon: const Icon(Icons.grid_view),
+              onPressed: () {},
+              tooltip: 'Matrix',
+            ),
+            IconButton(
+              icon: const Icon(Icons.settings),
+              onPressed: () {},
+              tooltip: 'Settings',
+            ),
+          ],
+        ),
       ),
     );
   }
