@@ -29,11 +29,11 @@ class TaskCard extends StatelessWidget {
               children: [
                 const Icon(Icons.calendar_today, size: 14, color: Colors.grey),
                 const SizedBox(width: 4),
-                Text(task.deadline, style: const TextStyle(fontSize: 12)),
+                Text(task.deadline.toString(), style: const TextStyle(fontSize: 12)),
                 const SizedBox(width: 16),
                 const Icon(Icons.priority_high, size: 14, color: Colors.grey),
                 const SizedBox(width: 4),
-                Text(task.importance, style: const TextStyle(fontSize: 12)),
+                Text(task.importance.toString(), style: const TextStyle(fontSize: 12)),
               ],
             ),
           ],

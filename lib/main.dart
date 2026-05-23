@@ -161,7 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: (int index) {
                   setDialogState(() {
                     selectedImportance = ['Low', 'Medium', 'High'][index];
-                    taskImportance = index;
+                    taskImportance = index + 1;
                   });
                 },
                 borderRadius: BorderRadius.circular(8),
@@ -235,7 +235,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
 
                   decoration: BoxDecoration(
-                    color: Colors.amber,
+                    color: Colors.amberAccent,
                     borderRadius: BorderRadius.circular(30),
                   ),
 
