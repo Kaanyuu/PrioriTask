@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       //Theme of the application
       theme: ThemeData(
         //Color scheme of the app
-        colorScheme: .fromSeed(seedColor: Colors.amber),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
       ),
       home: const MyHomePage(title: 'PrioriTask'),
     );
@@ -36,6 +36,72 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<Task> tasks = [];
+
+  //Add task prompt
+  // To be abstracted
+  void _addTaskPrompt() {
+    final nameController = TextEditingController();
+    final deadlineController = TextEditingController();
+    final descriptionController = TextEditingController();
+    final importanceController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Add New Task'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(labelText: 'Task Name'),
+                ),
+                TextField(
+                  controller: deadlineController,
+                  decoration: const InputDecoration(labelText: 'Deadline'),
+                ),
+                TextField(
+                  controller: descriptionController,
+                  decoration: const InputDecoration(labelText: 'Description'),
+                ),
+                TextField(
+                  controller: importanceController,
+                  decoration: const InputDecoration(labelText: 'Importance'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (nameController.text.isNotEmpty) {
+                  setState(() {
+                    tasks.add(
+                      Task(
+                        name: nameController.text,
+                        deadline: deadlineController.text,
+                        description: descriptionController.text,
+                        importance: importanceController.text,
+                      ),
+                    );
+                  });
+                  Navigator.pop(context);
+                }
+              },
+              child: const Text('Add'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,23 +137,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
             Expanded(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'You have pushed the button this many times:',
-                    ),
-
-                    Text(
-                      //to be changed
-                      '$_counter',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineMedium,
-                    ),
-                  ],
-                ),
+              child: ListView.builder(
+                itemCount: tasks.length,
+                itemBuilder: (context, index) {
+                  return TaskCard(
+                    task: tasks[index],
+                  );
+                },
               ),
             ),
           ],
@@ -97,8 +153,8 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       //To be changed
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: _addTaskPrompt,
+        tooltip: 'Add Task',
         child: const Icon(Icons.add),
       ),
     );
