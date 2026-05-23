@@ -38,68 +38,94 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Task> tasks = [];
 
   //Add task prompt
-  // To be abstracted
-  void _addTaskPrompt() {
+  Future<void> _addTaskPrompt() async {
     final nameController = TextEditingController();
-    final deadlineController = TextEditingController();
     final descriptionController = TextEditingController();
     final importanceController = TextEditingController();
 
-    showDialog(
+    // 1. Ask for Name
+    String? name = await showDialog<String>(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Add New Task'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: nameController,
-                  decoration: const InputDecoration(labelText: 'Task Name'),
-                ),
-                TextField(
-                  controller: deadlineController,
-                  decoration: const InputDecoration(labelText: 'Deadline'),
-                ),
-                TextField(
-                  controller: descriptionController,
-                  decoration: const InputDecoration(labelText: 'Description'),
-                ),
-                TextField(
-                  controller: importanceController,
-                  decoration: const InputDecoration(labelText: 'Importance'),
-                ),
-              ],
-            ),
+      builder: (context) => AlertDialog(
+        title: const Text('Task Name'),
+        content: TextField(
+          controller: nameController,
+          autofocus: true,
+          decoration: const InputDecoration(hintText: "Task Name"),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+          TextButton(
+            onPressed: () {
+              if (nameController.text.isNotEmpty) {
+                Navigator.pop(context, nameController.text);
+              }
+            },
+            child: const Text('Next'),
+          ),
+        ],
+      ),
+    );
+
+    if (name == null || name.isEmpty) return;
+
+    // 2. Ask for Deadline (Calendar)
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2101),
+    );
+
+    if (pickedDate == null) return;
+    String formattedDate = "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+
+    // 3. Ask for Description and Importance
+    bool? confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Final Details'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: descriptionController,
+              decoration: const InputDecoration(labelText: 'Description'),
             ),
-            TextButton(
-              onPressed: () {
-                if (nameController.text.isNotEmpty) {
-                  setState(() {
-                    tasks.add(
-                      Task(
-                        name: nameController.text,
-                        deadline: deadlineController.text,
-                        description: descriptionController.text,
-                        importance: importanceController.text,
-                      ),
-                    );
-                  });
-                  Navigator.pop(context);
-                }
-              },
-              child: const Text('Add'),
+            TextField(
+              controller: importanceController,
+              decoration: const InputDecoration(labelText: 'Importance'),
             ),
           ],
-        );
-      },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Add Task'),
+          ),
+        ],
+      ),
     );
+
+    if (confirmed == true) {
+      setState(() {
+        tasks.add(
+          Task(
+            name: name,
+            deadline: formattedDate,
+            description: descriptionController.text,
+            importance: importanceController.text,
+          ),
+        );
+      });
+    }
   }
 
   @override
@@ -137,14 +163,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
             Expanded(
-              child: ListView.builder(
-                itemCount: tasks.length,
-                itemBuilder: (context, index) {
-                  return TaskCard(
-                    task: tasks[index],
-                  );
-                },
-              ),
+              child: tasks.isEmpty
+                  ? const Center(child: Text('No tasks yet. Tap + to add one!'))
+                  : ListView.builder(
+                      itemCount: tasks.length,
+                      itemBuilder: (context, index) {
+                        return TaskCard(
+                          task: tasks[index],
+                          onDelete: () {
+                            setState(() {
+                              tasks.removeAt(index);
+                            });
+                          },
+                        );
+                      },
+                    ),
             ),
           ],
         ),
