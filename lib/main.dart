@@ -42,6 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final nameController = TextEditingController();
     final descriptionController = TextEditingController();
     final importanceController = TextEditingController();
+    final difficultyController = TextEditingController();
 
     // 1. Ask for Name
     String? name = await showDialog<String>(
@@ -99,6 +100,10 @@ class _MyHomePageState extends State<MyHomePage> {
               controller: importanceController,
               decoration: const InputDecoration(labelText: 'Importance'),
             ),
+            TextField(
+              controller: difficultyController,
+              decoration: const InputDecoration(labelText: 'Difficulty'),
+            ),
           ],
         ),
         actions: [
@@ -138,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: const EdgeInsets.only(top: 20, left: 20),
               child: Align(
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.center,
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
@@ -151,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
 
                   child: Text(
-                    'PrioriTask',
+                    'Schedule 1',
                     style: GoogleFonts.poppins(
                       fontSize: 23,
                       fontWeight: FontWeight.w500,
