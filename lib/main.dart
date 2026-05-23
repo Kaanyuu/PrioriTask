@@ -4,7 +4,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'models/task.dart';
 import 'widgets/task_card.dart';
 
-
 void main() {
   runApp(const MyApp());
 }
@@ -12,11 +11,14 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'PrioriTask',
+      //Theme of the application
       theme: ThemeData(
+        //Color scheme of the app
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
       ),
       home: const MyHomePage(title: 'PrioriTask'),
@@ -36,12 +38,15 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<Task> tasks = [];
 
+  //Add task prompt
   Future<void> _addTaskPrompt() async {
     final nameController = TextEditingController();
     final descriptionController = TextEditingController();
+    int taskDifficulty = 0;
+    int taskImportance = 0;
 
-    // 1. Ask for Name
-    String? name = await showDialog<String>(
+    // 1. Ask for name
+    String? taskName = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Task Name'),
@@ -67,10 +72,13 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
 
-    if (name == null || name.isEmpty) return;
+    if (taskName == null || taskName.isEmpty) return;
+    //Checks if screen is still mounted, if not, stop code,
+    // this stops zombie code
+    if (!mounted) return;
 
-    // 2. Ask for Deadline (Calendar)
-    DateTime? pickedDate = await showDatePicker(
+    // 2. Ask for deadline
+    DateTime? taskDeadline = await showDatePicker(
       context: context,
       helpText: 'Select deadline',
       initialDate: DateTime.now(),
@@ -78,43 +86,41 @@ class _MyHomePageState extends State<MyHomePage> {
       lastDate: DateTime(2101),
     );
 
-    if (pickedDate == null) return;
-    String formattedDate =
-        "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+    if (taskDeadline == null) return;
+    //Check if screen is still mounted
+    if (!mounted) return;
 
-    // 3. Ask for Description, Difficulty, and Importance
-    String selectedImportance = 'Low'; // Dialog state variable
-    double selectedDifficulty = 1; // Difficulty state variable
+    // 3. Ask for Description, Difficulty, Importance
+    String selectedImportance = 'Low'; // Dialog state | Initilization
+    double selectedDifficulty = 1; // Dialog state | Initilization
 
     bool? confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => StatefulBuilder( // Allows setState inside dialog
+      builder: (context) => StatefulBuilder( // ✅ Allows setState inside dialog
         builder: (context, setDialogState) => AlertDialog(
           title: const Text('Final Details'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // DESCRIPTION
               TextField(
                 controller: descriptionController,
                 decoration: const InputDecoration(labelText: 'Description'),
               ),
               const SizedBox(height: 16),
 
-              // DIFFICULTY LABEL
+              // DIFFICULTY
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Difficulty',
                   style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.black,
-                    fontFamily: 'Roboto',
-                  ),
+                      fontSize: 12,
+                      color: Colors.black,
+                      fontFamily: 'Roboto'),
                 ),
               ),
               const SizedBox(height: 6),
-
-              // STARS FOR DIFFICULTY
               RatingBar.builder(
                 initialRating: selectedDifficulty,
                 minRating: 1,
@@ -125,16 +131,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 itemBuilder: (context, _) => const Icon(
                   Icons.star,
                   color: Colors.amber,
-                  size: 20.0,
                 ),
                 onRatingUpdate: (rating) {
                   setDialogState(() {
                     selectedDifficulty = rating;
+                    taskDifficulty = selectedDifficulty.toInt();
                   });
                 },
               ),
 
-              // Importance LABEL
+              // IMPORTANCE
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -142,13 +148,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: TextStyle(
                       fontSize: 12,
                       color: Colors.black,
-                      fontFamily: 'Roboto',
-                  ),
+                      fontFamily: 'Roboto'),
                 ),
               ),
               const SizedBox(height: 6),
-
-              // Horizontal Low / Medium / High toggle
               ToggleButtons(
                 isSelected: [
                   selectedImportance == 'Low',
@@ -158,6 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: (int index) {
                   setDialogState(() {
                     selectedImportance = ['Low', 'Medium', 'High'][index];
+                    taskImportance = index;
                   });
                 },
                 borderRadius: BorderRadius.circular(8),
@@ -202,11 +206,11 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         tasks.add(
           Task(
-            name: name,
-            deadline: formattedDate,
+            name: nameController.text,
+            deadline: taskDeadline,
             description: descriptionController.text,
-            difficulty: selectedDifficulty.toString(),
-            importance: selectedImportance,
+            importance: taskImportance,
+            difficulty: taskDifficulty,
           ),
         );
       });
@@ -219,22 +223,24 @@ class _MyHomePageState extends State<MyHomePage> {
       body: SafeArea(
         child: Column(
           children: [
-            // PrioriTask header
+            // PrioriTask shape
             Padding(
               padding: const EdgeInsets.only(top: 20, left: 20),
               child: Align(
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.center,
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
                     vertical: 10,
                   ),
+
                   decoration: BoxDecoration(
                     color: Colors.amber,
                     borderRadius: BorderRadius.circular(30),
                   ),
+
                   child: Text(
-                    'PrioriTask',
+                    'Schedule 1',
                     style: GoogleFonts.poppins(
                       fontSize: 23,
                       fontWeight: FontWeight.w500,
@@ -246,9 +252,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
             Expanded(
               child: tasks.isEmpty
-                  ? const Center(
-                child: Text('No tasks yet. Tap + to add one!'),
-              )
+                  ? const Center(child: Text('No tasks yet. Tap + to add one!'))
                   : ListView.builder(
                 itemCount: tasks.length,
                 itemBuilder: (context, index) {
@@ -267,11 +271,48 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
 
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addTaskPrompt,
-        tooltip: 'Add Task',
-        child: const Icon(Icons.add),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: SizedBox(
+        height: 60,
+        width: 60,
+        child: FloatingActionButton(
+          onPressed: _addTaskPrompt,
+          tooltip: 'Add Task',
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add, size: 30), // Bigger icon to match
+        ),
+      ),
+
+      //Bottom Navigation Bar
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 10.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.list),
+              onPressed: () {},
+              tooltip: 'Tasks',
+            ),
+            IconButton(
+              icon: const Icon(Icons.calendar_month),
+              onPressed: () {},
+              tooltip: 'Calendar',
+            ),
+            const SizedBox(width: 40),
+            IconButton(
+              icon: const Icon(Icons.grid_view),
+              onPressed: () {},
+              tooltip: 'Matrix',
+            ),
+            IconButton(
+              icon: const Icon(Icons.settings),
+              onPressed: () {},
+              tooltip: 'Settings',
+            ),
+          ],
+        ),
       ),
     );
   }
