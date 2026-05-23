@@ -44,7 +44,6 @@ class _MyHomePageState extends State<MyHomePage> {
     final importanceController = TextEditingController();
     final difficultyController = TextEditingController();
 
-    // 1. Ask for Name
     String? name = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
@@ -72,8 +71,10 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     if (name == null || name.isEmpty) return;
+    //Checks if screen is still mounted, if not, stop code,
+    // this stops zombie code
+    if (!mounted) return;
 
-    // 2. Ask for Deadline (Calendar)
     DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -82,9 +83,12 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     if (pickedDate == null) return;
+    //Check if screen is still mounted
+    if (!mounted) return;
+
     String formattedDate = "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
 
-    // 3. Ask for Description and Importance
+    
     bool? confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
