@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'models/task.dart';
-import 'widgets/task_card.dart';
 import 'widgets/addTaskPrompt.dart';
+import 'views/tasks_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,61 +37,38 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Schedule currentSchedule = Schedule(name: 'Schedule 1');
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    // Determine which Page to show
+    Widget currentView;
+    switch (_selectedIndex) {
+      case 0:
+        currentView = TasksPage(
+          schedule: currentSchedule,
+          onTaskDeleted: (index) {
+            setState(() {
+              currentSchedule.tasks.removeAt(index);
+            });
+          },
+        );
+        break;
+      case 1:
+        currentView = const Center(child: Text('Calendar View'));
+        break;
+      case 2:
+        currentView = const Center(child: Text('Matrix View'));
+        break;
+      case 3:
+        currentView = const Center(child: Text('Settings View'));
+        break;
+      default:
+        currentView = const Center(child: Text('Page not found'));
+    }
+
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            // PrioriTask shape
-            Padding(
-              padding: const EdgeInsets.only(top: 20, left: 20),
-              child: Align(
-                alignment: Alignment.center,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
-                  ),
-
-                  decoration: BoxDecoration(
-                    color: Colors.amberAccent,
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-
-                  child: Text(
-                    currentSchedule.name,
-                    style: GoogleFonts.poppins(
-                      fontSize: 23,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            Expanded(
-              child: currentSchedule.tasks.isEmpty
-                  ? const Center(child: Text('No tasks yet. Tap + to add one!'))
-                  : ListView.builder(
-                itemCount: currentSchedule.tasks.length,
-                itemBuilder: (context, index) {
-                  return TaskCard(
-                    task: currentSchedule.tasks[index],
-                    onDelete: () {
-                      setState(() {
-                        currentSchedule.tasks.removeAt(index);
-                      });
-                    },
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-
+      body: SafeArea(child: currentView),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: SizedBox(
         height: 60,
@@ -116,29 +93,127 @@ class _MyHomePageState extends State<MyHomePage> {
         shape: const CircularNotchedRectangle(),
         notchMargin: 10.0,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            IconButton(
-              icon: const Icon(Icons.list),
-              onPressed: () {},
-              tooltip: 'Tasks',
-
+            Expanded(
+              child: InkWell(
+                onTap: () => setState(() => _selectedIndex = 0),
+                borderRadius: BorderRadius.circular(15),
+                splashColor: Colors.amber.withValues(alpha: 0.2),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.list,
+                        color: _selectedIndex == 0 ? Colors.amber : Colors.grey,
+                      ),
+                      Text(
+                        'Tasks',
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          color: _selectedIndex == 0 ? Colors.amber : Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            IconButton(
-              icon: const Icon(Icons.calendar_month),
-              onPressed: () {},
-              tooltip: 'Calendar',
+            Expanded(
+              child: InkWell(
+                onTap: () => setState(() => _selectedIndex = 1),
+                borderRadius: BorderRadius.circular(15),
+                splashColor: Colors.amber.withValues(alpha: 0.2),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.calendar_month,
+                        color: _selectedIndex == 1 ? Colors.amber : Colors.grey,
+                      ),
+                      Text(
+                        'Calendar',
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          color: _selectedIndex == 1 ? Colors.amber : Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
             const SizedBox(width: 40),
-            IconButton(
-              icon: const Icon(Icons.grid_view),
-              onPressed: () {},
-              tooltip: 'Matrix',
+            Expanded(
+              child: InkWell(
+                onTap: () => setState(() => _selectedIndex = 2),
+                borderRadius: BorderRadius.circular(15),
+                splashColor: Colors.amber.withValues(alpha: 0.2),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.grid_view,
+                        color: _selectedIndex == 2 ? Colors.amber : Colors.grey,
+                      ),
+                      Text(
+                        'Matrix',
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          color: _selectedIndex == 2 ? Colors.amber : Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            IconButton(
-              icon: const Icon(Icons.settings),
-              onPressed: () {},
-              tooltip: 'Settings',
+            Expanded(
+              child: InkWell(
+                onTap: () => setState(() => _selectedIndex = 3),
+                borderRadius: BorderRadius.circular(15),
+                splashColor: Colors.amber.withValues(alpha: 0.2),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.settings,
+                        color: _selectedIndex == 3 ? Colors.amber : Colors.grey,
+                      ),
+                      Text(
+                        'Settings',
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          color: _selectedIndex == 3 ? Colors.amber : Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         ),
