@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'PrioriTask',
       //Theme of the application
       theme: ThemeData(
@@ -38,37 +39,38 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   Schedule currentSchedule = Schedule(name: 'Schedule 1');
   int _selectedIndex = 0;
+  final PageController _pageController = PageController();
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Determine which Page to show
-    Widget currentView;
-    switch (_selectedIndex) {
-      case 0:
-        currentView = TasksPage(
-          schedule: currentSchedule,
-          onTaskDeleted: (index) {
-            setState(() {
-              currentSchedule.tasks.removeAt(index);
-            });
-          },
-        );
-        break;
-      case 1:
-        currentView = const Center(child: Text('Calendar View'));
-        break;
-      case 2:
-        currentView = const Center(child: Text('Matrix View'));
-        break;
-      case 3:
-        currentView = const Center(child: Text('Settings View'));
-        break;
-      default:
-        currentView = const Center(child: Text('Page not found'));
-    }
-
     return Scaffold(
-      body: SafeArea(child: currentView),
+      body: SafeArea(
+        child: PageView(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() => _selectedIndex = index);
+          },
+          children: [
+            TasksPage(
+              schedule: currentSchedule,
+              onTaskDeleted: (index) {
+                setState(() {
+                  currentSchedule.tasks.removeAt(index);
+                });
+              },
+            ),
+            const Center(child: Text('Calendar View')),
+            const Center(child: Text('Matrix View')),
+            const Center(child: Text('Settings View')),
+          ],
+        ),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: SizedBox(
         height: 60,
@@ -96,7 +98,13 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             Expanded(
               child: InkWell(
-                onTap: () => setState(() => _selectedIndex = 0),
+                onTap: () {
+                  _pageController.animateToPage(
+                    0,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
+                },
                 borderRadius: BorderRadius.circular(15),
                 splashColor: Colors.amber.withValues(alpha: 0.2),
                 child: Container(
@@ -126,7 +134,13 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Expanded(
               child: InkWell(
-                onTap: () => setState(() => _selectedIndex = 1),
+                onTap: () {
+                  _pageController.animateToPage(
+                    1,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
+                },
                 borderRadius: BorderRadius.circular(15),
                 splashColor: Colors.amber.withValues(alpha: 0.2),
                 child: Container(
@@ -157,7 +171,13 @@ class _MyHomePageState extends State<MyHomePage> {
             const SizedBox(width: 40),
             Expanded(
               child: InkWell(
-                onTap: () => setState(() => _selectedIndex = 2),
+                onTap: () {
+                  _pageController.animateToPage(
+                    2,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
+                },
                 borderRadius: BorderRadius.circular(15),
                 splashColor: Colors.amber.withValues(alpha: 0.2),
                 child: Container(
@@ -187,7 +207,13 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Expanded(
               child: InkWell(
-                onTap: () => setState(() => _selectedIndex = 3),
+                onTap: () {
+                  _pageController.animateToPage(
+                    3,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
+                },
                 borderRadius: BorderRadius.circular(15),
                 splashColor: Colors.amber.withValues(alpha: 0.2),
                 child: Container(

@@ -17,7 +17,7 @@ class TasksPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // PrioriTask header/shape
+        // Schedule header shape and position
         Padding(
           padding: const EdgeInsets.only(top: 20, left: 20),
           child: Align(
@@ -42,7 +42,7 @@ class TasksPage extends StatelessWidget {
           ),
         ),
 
-        // The Task List
+        // Task List
         Expanded(
           child: schedule.tasks.isEmpty
               ? const Center(child: Text('No tasks yet. Tap + to add one!'))
