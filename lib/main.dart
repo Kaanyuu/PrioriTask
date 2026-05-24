@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'models/task.dart';
 import 'widgets/addTaskPrompt.dart';
 import 'views/tasks_page.dart';
+import 'views/calendar_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -81,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
                 });
               },
             ),
-            const Center(child: Text('Calendar View')),
+            CalendarPage(schedule: currentSchedule),
             const Center(child: Text('Matrix View')),
             const Center(child: Text('Settings View')),
           ],
@@ -103,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
           },
           tooltip: 'Add Task',
           shape: const CircleBorder(),
-          child: const Icon(Icons.add, size: 30), // Bigger icon to match
+          child: const Icon(Icons.add, size: 30),
         ),
       ),
 
