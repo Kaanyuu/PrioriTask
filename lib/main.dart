@@ -36,15 +36,30 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
   Schedule currentSchedule = Schedule(name: 'Schedule 1');
   int _selectedIndex = 0;
   final PageController _pageController = PageController();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this); // Adds an observer to react whenever the app resumes in background
+    recomputeAll(currentSchedule);
+  }
+
+  @override
   void dispose() {
     _pageController.dispose();
+    WidgetsBinding.instance.removeObserver(this); // Dispose observer
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) { // Checks if the app is resumed
+      recomputeAll(currentSchedule);
+    }
   }
 
   @override
@@ -62,6 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onTaskDeleted: (index) {
                 setState(() {
                   currentSchedule.tasks.removeAt(index);
+                  recomputeAll(currentSchedule);
                 });
               },
             ),
@@ -77,10 +93,11 @@ class _MyHomePageState extends State<MyHomePage> {
         width: 60,
         child: FloatingActionButton(
           onPressed: () async {
-            Task? newTask = await showAddTaskPrompt(context);
+            Task? newTask = await showAddTaskPrompt(context, currentSchedule);
             if (newTask != null) {
               setState(() {
                 currentSchedule.tasks.add(newTask);
+                recomputeAll(currentSchedule);
               });
             }
           },

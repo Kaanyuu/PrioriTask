@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../models/task.dart';
+import '../main.dart';
 
-Future<Task?> showAddTaskPrompt(BuildContext context) async {
+Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) async {
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
-  int taskDifficulty = 1;
-  int taskImportance = 1;
+  double taskDifficulty = 0.00;
+  double taskImportance = 0.00;
 
   // Task Name Section
   String? taskName = await showDialog<String>(
@@ -98,7 +99,7 @@ Future<Task?> showAddTaskPrompt(BuildContext context) async {
               onRatingUpdate: (rating) {
                 setDialogState(() {
                   selectedDifficulty = rating;
-                  taskDifficulty = selectedDifficulty.toInt();
+                  taskDifficulty = selectedDifficulty;
                 });
               },
             ),
@@ -166,12 +167,38 @@ Future<Task?> showAddTaskPrompt(BuildContext context) async {
   );
 
   if (confirmed == true) {
+
+    // GET THE REMAINING ATTRIBUTES
+    int remainingDays = computeRemainingDays(taskDeadline);
+    double urgencyScore = computeUrgency(remainingDays);
+    double importanceScore = normalizeImportance(taskImportance);
+    double difficultyScore = normalizeDifficulty(taskDifficulty);
+
+    // INITIALIZE CURRENT TASK FIRST TO CHECK FOR TIEBREAK
+    Task current = Task(
+      name: nameController.text,
+      deadline: taskDeadline,
+      description: descriptionController.text,
+      importance: importanceScore,
+      difficulty: difficultyScore,
+      remainingDays: remainingDays,
+      urgency: urgencyScore,
+    );
+
+    // CHECK TIEBREAK, THEN COMPUTE PSCORE
+    bool tieBrake = checkTieBreak(current, currentSchedule.tasks);
+    double priorityScore = computePriority(urgencyScore, importanceScore, difficultyScore, tieBrake);
+
+    // RETURN COMPLETE TASK
     return Task(
       name: nameController.text,
       deadline: taskDeadline,
       description: descriptionController.text,
-      importance: taskImportance,
-      difficulty: taskDifficulty,
+      importance: importanceScore,
+      difficulty: difficultyScore,
+      remainingDays: remainingDays,
+      urgency: urgencyScore,
+      priority: priorityScore,
     );
   }
   return null;
