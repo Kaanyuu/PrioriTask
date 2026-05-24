@@ -93,7 +93,6 @@ class _CalendarPageState extends State<CalendarPage> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          // This adds markers for days that have tasks deadline
           eventLoader: _getTasksForDay,
           // Custom Week Name Styling
           calendarBuilders: CalendarBuilders(
@@ -140,7 +139,7 @@ class _CalendarPageState extends State<CalendarPage> {
       ],
     );
   }
-
+  // Marker Section
   Widget _buildMarker(Color color) {
     return Container(
       width: 6,
@@ -153,6 +152,7 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 
+  //Task list
   Widget _buildTaskListForDate(DateTime date) {
     final tasksForDate = _getTasksForDay(date);
 
@@ -164,15 +164,32 @@ class _CalendarPageState extends State<CalendarPage> {
       itemCount: tasksForDate.length,
       itemBuilder: (context, index) {
         final task = tasksForDate[index];
-        return ListTile(
-          leading: const Icon(Icons.task_alt, color: Colors.amber),
-          title: Text(task.name, style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
-          subtitle: Text(task.description),
-          trailing: Text(
-            task.importance >= 0.9 ? 'High' : (task.importance >= 0.6 ? 'Medium' : 'Low'),
-            style: TextStyle(
-              color: task.importance >= 0.9 ? Colors.red : (task.importance >= 0.6 ? Colors.orange : Colors.green),
-              fontWeight: FontWeight.bold,
+        return Card(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(color: Colors.grey.withValues(alpha: 0.2)),
+          ),
+          child: ListTile(
+            leading: const Icon(Icons.task_alt, color: Colors.amber),
+            title: Text(task.name, style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(task.description),
+                Text(
+                  "${task.deadline.year}-${task.deadline.month.toString().padLeft(2, '0')}-${task.deadline.day.toString().padLeft(2, '0')}",
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+              ],
+            ),
+            trailing: Text(
+              task.importance >= 0.9 ? 'High' : (task.importance >= 0.6 ? 'Medium' : 'Low'),
+              style: TextStyle(
+                color: task.importance >= 0.9 ? Colors.red : (task.importance >= 0.6 ? Colors.orange : Colors.green),
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         );

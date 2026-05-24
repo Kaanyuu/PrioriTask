@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../models/task.dart';
 import '../widgets/task_card.dart';
 
-class TasksPage extends StatelessWidget {
+class TasksPage extends StatefulWidget {
   final Schedule schedule;
   final Function(int) onTaskDeleted;
 
@@ -14,10 +14,17 @@ class TasksPage extends StatelessWidget {
   });
 
   @override
+  State<TasksPage> createState() => _TasksPageState();
+}
+
+class _TasksPageState extends State<TasksPage> {
+  int? _expandedIndex;
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Schedule header shape and position
+        // PrioriTask header/shape
         Padding(
           padding: const EdgeInsets.only(top: 20, left: 20),
           child: Align(
@@ -41,17 +48,30 @@ class TasksPage extends StatelessWidget {
             ),
           ),
         ),
-
         // Task List
         Expanded(
-          child: schedule.tasks.isEmpty
+          child: widget.schedule.tasks.isEmpty
               ? const Center(child: Text('No tasks yet. Tap + to add one!'))
               : ListView.builder(
-                  itemCount: schedule.tasks.length,
+                  itemCount: widget.schedule.tasks.length,
                   itemBuilder: (context, index) {
                     return TaskCard(
-                      task: schedule.tasks[index],
-                      onDelete: () => onTaskDeleted(index),
+                      task: widget.schedule.tasks[index],
+                      isExpanded: _expandedIndex == index,
+                      onTap: () {
+                        setState(() {
+                          // Clicking expands/collapses task card
+                          _expandedIndex = (_expandedIndex == index) ? null : index;
+                        });
+                      },
+                      onDelete: () {
+                        if (_expandedIndex == index) {
+                          _expandedIndex = null;
+                        } else if (_expandedIndex != null && _expandedIndex! > index) {
+                          _expandedIndex = _expandedIndex! - 1;
+                        }
+                        widget.onTaskDeleted(index);
+                      },
                     );
                   },
                 ),
