@@ -32,7 +32,7 @@ class TasksPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(30),
               ),
               child: Text(
-                schedule.name,
+                'PrioriTask',
                 style: GoogleFonts.poppins(
                   fontSize: 23,
                   fontWeight: FontWeight.w500,

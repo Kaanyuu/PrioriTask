@@ -38,27 +38,30 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
-  Schedule currentSchedule = Schedule(name: 'Schedule 1');
+  Schedule currentSchedule = Schedule();
   int _selectedIndex = 0;
   final PageController _pageController = PageController();
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this); // Adds an observer to react whenever the app resumes in background
+    // Adds an observer to react whenever the app resumes in background
+    WidgetsBinding.instance.addObserver(this);
     recomputeAll(currentSchedule);
   }
 
   @override
   void dispose() {
     _pageController.dispose();
-    WidgetsBinding.instance.removeObserver(this); // Dispose observer
+    // Disposes Observer
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) { // Checks if the app is resumed
+    // Checks if the app is running
+    if (state == AppLifecycleState.resumed) {
       recomputeAll(currentSchedule);
     }
   }

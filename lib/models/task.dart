@@ -24,11 +24,9 @@ class Task {
 }
 
 class Schedule {
-  String name;
   List<Task> tasks;
 
   Schedule({
-    required this.name,
     List<Task>? tasks,
   }) : tasks = tasks ?? [];
 }

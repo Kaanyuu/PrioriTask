@@ -64,8 +64,12 @@ class _CalendarPageState extends State<CalendarPage> {
           // Calendar Styling
           calendarStyle: CalendarStyle(
             todayDecoration: BoxDecoration(
-              color: Colors.amber.withValues(alpha: 0.5),
+              border: Border.all(color: Colors.amber, width: 2),
               shape: BoxShape.circle,
+            ),
+            todayTextStyle: GoogleFonts.poppins(
+              fontWeight: FontWeight.w600,
+              color: Colors.amber,
             ),
             selectedDecoration: const BoxDecoration(
               color: Colors.amber,
@@ -80,7 +84,7 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
           headerStyle: HeaderStyle(
             formatButtonVisible: true,
-            formatButtonShowsNext: false, // This makes the label match the current view
+            formatButtonShowsNext: false,
             titleCentered: true,
             formatButtonDecoration: BoxDecoration(
               color: Colors.amber,
@@ -121,9 +125,9 @@ class _CalendarPageState extends State<CalendarPage> {
           title: Text(task.name, style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
           subtitle: Text(task.description),
           trailing: Text(
-            task.importance == 3 ? 'High' : (task.importance == 2 ? 'Medium' : 'Low'),
+            task.importance >= 0.9 ? 'High' : (task.importance >= 0.6 ? 'Medium' : 'Low'),
             style: TextStyle(
-              color: task.importance == 3 ? Colors.red : (task.importance == 2 ? Colors.orange : Colors.green),
+              color: task.importance >= 0.9 ? Colors.red : (task.importance >= 0.6 ? Colors.orange : Colors.green),
               fontWeight: FontWeight.bold,
             ),
           ),

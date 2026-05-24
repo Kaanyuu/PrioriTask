@@ -35,7 +35,7 @@ class TaskCard extends StatelessWidget {
                 const Icon(Icons.priority_high, size: 14, color: Colors.grey),
                 const SizedBox(width: 4),
                 Text(
-                  task.importance == 3 ? 'High' : (task.importance == 2 ? 'Medium' : 'Low'),
+                  task.importance >= 0.9 ? 'High' : (task.importance >= 0.6 ? 'Medium' : 'Low'),
                   style: const TextStyle(fontSize: 12),
                 ),
               ],

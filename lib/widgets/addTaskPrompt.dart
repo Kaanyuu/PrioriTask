@@ -6,8 +6,10 @@ import '../main.dart';
 Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) async {
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
-  double taskDifficulty = 0.00;
-  double taskImportance = 0.00;
+  
+  // Initialized properly to match the preselected
+  double taskDifficulty = 1.0; 
+  double taskImportance = 1.0;
 
   // Task Name Section
   String? taskName = await showDialog<String>(
