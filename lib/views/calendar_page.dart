@@ -5,7 +5,6 @@ import '../models/task.dart';
 
 class CalendarPage extends StatefulWidget {
   final Schedule schedule;
-
   const CalendarPage({super.key, required this.schedule});
 
   @override
@@ -22,7 +21,6 @@ class _CalendarPageState extends State<CalendarPage> {
     super.initState();
     _selectedDay = _focusedDay;
   }
-
   // This filters task for a specific day(to be changed)
   List<Task> _getTasksForDay(DateTime day) {
     return widget.schedule.tasks.where((task) {
@@ -43,12 +41,10 @@ class _CalendarPageState extends State<CalendarPage> {
             return isSameDay(_selectedDay, day);
           },
           onDaySelected: (selectedDay, focusedDay) {
-            if (!isSameDay(_selectedDay, selectedDay)) {
-              setState(() {
-                _selectedDay = selectedDay;
-                _focusedDay = focusedDay;
-              });
-            }
+            setState(() {
+              _selectedDay = selectedDay;
+              _focusedDay = selectedDay;
+            });
           },
           onFormatChanged: (format) {
             if (_calendarFormat != format) {
@@ -58,11 +54,15 @@ class _CalendarPageState extends State<CalendarPage> {
             }
           },
           onPageChanged: (focusedDay) {
-            _focusedDay = focusedDay;
+            setState(() {
+              _focusedDay = focusedDay;
+            });
           },
-          
           // Calendar Styling
           calendarStyle: CalendarStyle(
+            cellMargin: const EdgeInsets.all(4),
+            tableBorder: TableBorder.all(color: Colors.grey.withValues(alpha: 0.3)), // Adds the grid lines
+            // Today highlight
             todayDecoration: BoxDecoration(
               border: Border.all(color: Colors.amber, width: 2),
               shape: BoxShape.circle,
@@ -71,16 +71,13 @@ class _CalendarPageState extends State<CalendarPage> {
               fontWeight: FontWeight.w600,
               color: Colors.amber,
             ),
+            // Selected highlight
             selectedDecoration: const BoxDecoration(
               color: Colors.amber,
               shape: BoxShape.circle,
             ),
-            markerDecoration: const BoxDecoration(
-              color: Colors.redAccent,
-              shape: BoxShape.circle,
-            ),
-            defaultTextStyle: GoogleFonts.poppins(fontWeight: FontWeight.w500),
-            weekendTextStyle: GoogleFonts.poppins(fontWeight: FontWeight.w500, color: Colors.red),
+            defaultTextStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+            weekendTextStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: Colors.red),
           ),
           headerStyle: HeaderStyle(
             formatButtonVisible: true,
@@ -96,8 +93,43 @@ class _CalendarPageState extends State<CalendarPage> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          // This adds markers (dots) for days that have tasks
+          // This adds markers for days that have tasks deadline
           eventLoader: _getTasksForDay,
+          // Custom Week Name Styling
+          calendarBuilders: CalendarBuilders(
+            dowBuilder: (context, day) {
+              final days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+              final text = days[day.weekday % 7];
+              return Center(
+                child: Text(
+                  text,
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600,
+                    color: day.weekday == DateTime.sunday || day.weekday == DateTime.saturday 
+                        ? Colors.red 
+                        : Colors.black87,
+                  ),
+                ),
+              );
+            },
+            markerBuilder: (context, date, events) {
+              if (events.isEmpty) return const SizedBox();
+              
+              final tasks = events.cast<Task>();
+              bool hasHigh = tasks.any((t) => t.importance >= 0.9);
+              bool hasMedium = tasks.any((t) => t.importance >= 0.6 && t.importance < 0.9);
+              bool hasLow = tasks.any((t) => t.importance < 0.6);
+
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (hasHigh) _buildMarker(Colors.red),
+                  if (hasMedium) _buildMarker(Colors.orange),
+                  if (hasLow) _buildMarker(Colors.green),
+                ],
+              );
+            },
+          ),
         ),
         const Divider(),
         Expanded(
@@ -106,6 +138,18 @@ class _CalendarPageState extends State<CalendarPage> {
               : _buildTaskListForDate(_selectedDay!),
         ),
       ],
+    );
+  }
+
+  Widget _buildMarker(Color color) {
+    return Container(
+      width: 6,
+      height: 6,
+      margin: const EdgeInsets.symmetric(horizontal: 1.5),
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+      ),
     );
   }
 
