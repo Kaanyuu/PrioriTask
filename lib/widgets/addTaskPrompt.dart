@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../models/task.dart';
 import '../main.dart';
 
@@ -15,31 +16,60 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
   String? taskName = await showDialog<String>(
     context: context,
     builder: (context) => AlertDialog(
-      title: const Text('Task Name'),
-      content: TextField(
-        controller: nameController,
-        autofocus: true,
-        decoration: const InputDecoration(hintText: "Task Name"),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      title: Text(
+        'Task Name',
+        style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18),
+      ),
+      content: Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: TextField(
+          controller: nameController,
+          autofocus: true,
+          style: GoogleFonts.poppins(fontSize: 14),
+          decoration: InputDecoration(
+            hintText: "What needs to be done?",
+            hintStyle: GoogleFonts.poppins(fontSize: 14, color: Colors.grey),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.amber),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.3)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.amber, width: 2),
+            ),
+          ),
+        ),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: Text('Cancel', style: GoogleFonts.poppins(color: Colors.grey)),
         ),
-        TextButton(
+        ElevatedButton(
           onPressed: () {
             if (nameController.text.isNotEmpty) {
               Navigator.pop(context, nameController.text);
             }
           },
-          child: const Text('Next'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.amber,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            elevation: 0,
+          ),
+          child: Text('Next', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
         ),
       ],
     ),
   );
 
   if (taskName == null || taskName.isEmpty) return null;
-  // Checks if screen is still mounted to stop zombie code
   if (!context.mounted) return null;
 
   // Select Date Section
@@ -50,10 +80,22 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
     lastDate: DateTime(2101),
     confirmText: 'Next',
     helpText: 'Select Deadline',
+    builder: (context, child) {
+      return Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: const ColorScheme.light(
+            primary: Colors.amber,
+            onPrimary: Colors.white,
+            onSurface: Colors.black87,
+          ),
+          textTheme: GoogleFonts.poppinsTextTheme(),
+        ),
+        child: child!,
+      );
+    },
   );
 
   if (taskDeadline == null) return null;
-  //Checks if screen is still mounted
   if (!context.mounted) return null;
 
   // Description, Difficulty and Importance Section
@@ -64,104 +106,115 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
     context: context,
     builder: (context) => StatefulBuilder(
       builder: (context, setDialogState) => AlertDialog(
-        title: const Text('Final Details'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // DESCRIPTION
-            TextField(
-              controller: descriptionController,
-              decoration: const InputDecoration(labelText: 'Description'),
-            ),
-            const SizedBox(height: 16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          'Final Details',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18),
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // DESCRIPTION
+              TextField(
+                controller: descriptionController,
+                style: GoogleFonts.poppins(fontSize: 14),
+                maxLines: 3,
+                decoration: InputDecoration(
+                  labelText: 'Description',
+                  labelStyle: GoogleFonts.poppins(color: Colors.grey, fontSize: 14),
+                  alignLabelWithHint: true,
+                  contentPadding: const EdgeInsets.all(16),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.amber, width: 2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
 
-            // DIFFICULTY
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Difficulty',
-                style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.black,
-                    fontFamily: 'Roboto'),
+              // DIFFICULTY
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Difficulty',
+                  style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600),
+                ),
               ),
-            ),
-            const SizedBox(height: 6),
-            RatingBar.builder(
-              initialRating: selectedDifficulty,
-              minRating: 1,
-              maxRating: 5,
-              allowHalfRating: false,
-              itemCount: 5,
-              itemPadding: const EdgeInsets.symmetric(horizontal: 4),
-              itemBuilder: (context, _) => const Icon(
-                Icons.star,
-                color: Colors.amber,
+              const SizedBox(height: 8),
+              RatingBar.builder(
+                initialRating: selectedDifficulty,
+                minRating: 1,
+                maxRating: 5,
+                allowHalfRating: false,
+                itemCount: 5,
+                itemSize: 30,
+                itemPadding: const EdgeInsets.symmetric(horizontal: 4),
+                itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.amber),
+                onRatingUpdate: (rating) {
+                  setDialogState(() {
+                    selectedDifficulty = rating;
+                    taskDifficulty = selectedDifficulty;
+                  });
+                },
               ),
-              onRatingUpdate: (rating) {
-                setDialogState(() {
-                  selectedDifficulty = rating;
-                  taskDifficulty = selectedDifficulty;
-                });
-              },
-            ),
+              const SizedBox(height: 16),
 
-            // IMPORTANCE
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Importance',
-                style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.black,
-                    fontFamily: 'Roboto'),
+              // IMPORTANCE
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Importance',
+                  style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600),
+                ),
               ),
-            ),
-            const SizedBox(height: 6),
-            ToggleButtons(
-              isSelected: [
-                selectedImportance == 'Low',
-                selectedImportance == 'Medium',
-                selectedImportance == 'High',
-              ],
-              onPressed: (int index) {
-                setDialogState(() {
-                  selectedImportance = ['Low', 'Medium', 'High'][index];
-                  taskImportance = index + 1;
-                });
-              },
-              borderRadius: BorderRadius.circular(8),
-              selectedColor: Colors.white,
-              fillColor: selectedImportance == 'High'
-                  ? Colors.red
-                  : selectedImportance == 'Medium'
-                  ? Colors.orange
-                  : Colors.green,
-              children: const [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
-                  child: Text('Low'),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
-                  child: Text('Medium'),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
-                  child: Text('High'),
-                ),
-              ],
-            ),
-          ],
+              const SizedBox(height: 8),
+              ToggleButtons(
+                isSelected: [
+                  selectedImportance == 'Low',
+                  selectedImportance == 'Medium',
+                  selectedImportance == 'High',
+                ],
+                onPressed: (int index) {
+                  setDialogState(() {
+                    selectedImportance = ['Low', 'Medium', 'High'][index];
+                    taskImportance = index + 1;
+                  });
+                },
+                borderRadius: BorderRadius.circular(10),
+                selectedColor: Colors.white,
+                fillColor: selectedImportance == 'High'
+                    ? Colors.redAccent
+                    : selectedImportance == 'Medium'
+                    ? Colors.orangeAccent
+                    : Colors.greenAccent[700],
+                constraints: const BoxConstraints(minHeight: 40, minWidth: 70),
+                children: [
+                  Text('Low', style: GoogleFonts.poppins(fontSize: 12)),
+                  Text('Medium', style: GoogleFonts.poppins(fontSize: 12)),
+                  Text('High', style: GoogleFonts.poppins(fontSize: 12)),
+                ],
+              ),
+            ],
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text('Cancel', style: GoogleFonts.poppins(color: Colors.grey)),
           ),
-          TextButton(
+          ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Add Task'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.amber,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              elevation: 0,
+            ),
+            child: Text('Add Task', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
           ),
         ],
       ),
@@ -169,14 +222,11 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
   );
 
   if (confirmed == true) {
-
-    // GET THE REMAINING ATTRIBUTES
     int remainingDays = computeRemainingDays(taskDeadline);
     double urgencyScore = computeUrgency(remainingDays);
     double importanceScore = normalizeImportance(taskImportance);
     double difficultyScore = normalizeDifficulty(taskDifficulty);
 
-    // INITIALIZE CURRENT TASK FIRST TO CHECK FOR TIEBREAK
     Task current = Task(
       name: nameController.text,
       deadline: taskDeadline,
@@ -187,11 +237,9 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
       urgency: urgencyScore,
     );
 
-    // CHECK TIEBREAK, THEN COMPUTE PSCORE
     bool tieBrake = checkTieBreak(current, currentSchedule.tasks);
     double priorityScore = computePriority(urgencyScore, importanceScore, difficultyScore, tieBrake);
 
-    // RETURN COMPLETE TASK
     return Task(
       name: nameController.text,
       deadline: taskDeadline,

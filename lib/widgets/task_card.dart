@@ -83,8 +83,7 @@ class TaskCard extends StatelessWidget {
                   ),
                 ],
               ),
-              
-              // EXPANDABLE SECTION
+              // Expanding Animation
               AnimatedCrossFade(
                 firstChild: const SizedBox(width: double.infinity),
                 secondChild: Column(
