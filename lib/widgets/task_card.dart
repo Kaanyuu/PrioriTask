@@ -19,6 +19,7 @@ class TaskCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       elevation: isExpanded ? 4 : 1,
       shape: RoundedRectangleBorder(
@@ -111,7 +112,7 @@ class TaskCard extends StatelessWidget {
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                         ),
                         RatingBarIndicator(
-                          rating: task.difficulty,
+                          rating: task.difficulty * 5,
                           itemBuilder: (context, index) => const Icon(
                             Icons.star,
                             color: Colors.amber,

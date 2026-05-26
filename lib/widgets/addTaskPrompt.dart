@@ -19,17 +19,17 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       title: Text(
         'Task Name',
-        style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18),
+        style: GoogleFonts.roboto(fontWeight: FontWeight.bold, fontSize: 18),
       ),
       content: Padding(
         padding: const EdgeInsets.only(top: 8.0),
         child: TextField(
           controller: nameController,
           autofocus: true,
-          style: GoogleFonts.poppins(fontSize: 14),
+          style: GoogleFonts.roboto(fontSize: 14),
           decoration: InputDecoration(
             hintText: "What needs to be done?",
-            hintStyle: GoogleFonts.poppins(fontSize: 14, color: Colors.grey),
+            hintStyle: GoogleFonts.roboto(fontSize: 14, color: Colors.grey),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -49,7 +49,7 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text('Cancel', style: GoogleFonts.poppins(color: Colors.grey)),
+          child: Text('Cancel', style: GoogleFonts.roboto(color: Colors.grey)),
         ),
         ElevatedButton(
           onPressed: () {
@@ -63,7 +63,7 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             elevation: 0,
           ),
-          child: Text('Next', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+          child: Text('Next', style: GoogleFonts.roboto(fontWeight: FontWeight.w600)),
         ),
       ],
     ),
@@ -88,7 +88,7 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
             onPrimary: Colors.white,
             onSurface: Colors.black87,
           ),
-          textTheme: GoogleFonts.poppinsTextTheme(),
+          textTheme: GoogleFonts.robotoTextTheme(),
         ),
         child: child!,
       );
@@ -109,7 +109,7 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(
           'Final Details',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18),
+          style: GoogleFonts.roboto(fontWeight: FontWeight.bold, fontSize: 18),
         ),
         content: SingleChildScrollView(
           child: Column(
@@ -118,11 +118,11 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
               // DESCRIPTION
               TextField(
                 controller: descriptionController,
-                style: GoogleFonts.poppins(fontSize: 14),
+                style: GoogleFonts.roboto(fontSize: 14),
                 maxLines: 3,
                 decoration: InputDecoration(
                   labelText: 'Description',
-                  labelStyle: GoogleFonts.poppins(color: Colors.grey, fontSize: 14),
+                  labelStyle: GoogleFonts.roboto(color: Colors.grey, fontSize: 14),
                   alignLabelWithHint: true,
                   contentPadding: const EdgeInsets.all(16),
                   border: OutlineInputBorder(
@@ -141,7 +141,7 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Difficulty',
-                  style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600),
+                  style: GoogleFonts.roboto(fontSize: 13, fontWeight: FontWeight.w600),
                 ),
               ),
               const SizedBox(height: 8),
@@ -168,7 +168,7 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Importance',
-                  style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600),
+                  style: GoogleFonts.roboto(fontSize: 13, fontWeight: FontWeight.w600),
                 ),
               ),
               const SizedBox(height: 8),
@@ -193,9 +193,9 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
                     : Colors.greenAccent[700],
                 constraints: const BoxConstraints(minHeight: 40, minWidth: 70),
                 children: [
-                  Text('Low', style: GoogleFonts.poppins(fontSize: 12)),
-                  Text('Medium', style: GoogleFonts.poppins(fontSize: 12)),
-                  Text('High', style: GoogleFonts.poppins(fontSize: 12)),
+                  Text('Low', style: GoogleFonts.roboto(fontSize: 12)),
+                  Text('Medium', style: GoogleFonts.roboto(fontSize: 12)),
+                  Text('High', style: GoogleFonts.roboto(fontSize: 12)),
                 ],
               ),
             ],
@@ -204,7 +204,7 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel', style: GoogleFonts.poppins(color: Colors.grey)),
+            child: Text('Cancel', style: GoogleFonts.roboto(color: Colors.grey)),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
@@ -214,7 +214,7 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               elevation: 0,
             ),
-            child: Text('Add Task', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+            child: Text('Add Task', style: GoogleFonts.roboto(fontWeight: FontWeight.w600)),
           ),
         ],
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../models/task.dart';
 import '../widgets/task_card.dart';
 
@@ -31,27 +32,65 @@ class _TasksPageState extends State<TasksPage> {
             alignment: Alignment.center,
             child: Container(
               padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 10,
+                horizontal: 28,
+                vertical: 14,
               ),
               decoration: BoxDecoration(
-                color: Colors.amberAccent,
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFF4F46E5),
+                    Color(0xFF8B5CF6),
+                  ],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
                 borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
               child: Text(
                 'PrioriTask',
-                style: GoogleFonts.poppins(
-                  fontSize: 23,
-                  fontWeight: FontWeight.w500,
+                style: GoogleFonts.roboto(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
                 ),
               ),
             ),
           ),
         ),
+        const SizedBox(height: 20),
         // Task List
         Expanded(
           child: widget.schedule.tasks.isEmpty
-              ? const Center(child: Text('No tasks yet. Tap + to add one!'))
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/list-todo.svg',
+                        width: 70,
+                        colorFilter: ColorFilter.mode(
+                          Colors.grey.withValues(alpha: 0.5),
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'No tasks yet. Tap + to add one!',
+                        style: GoogleFonts.roboto(
+                          color: Colors.grey,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
               : ListView.builder(
                   itemCount: widget.schedule.tasks.length,
                   itemBuilder: (context, index) {

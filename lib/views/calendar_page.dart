@@ -67,7 +67,7 @@ class _CalendarPageState extends State<CalendarPage> {
               border: Border.all(color: Colors.amber, width: 2),
               shape: BoxShape.circle,
             ),
-            todayTextStyle: GoogleFonts.poppins(
+            todayTextStyle: GoogleFonts.roboto(
               fontWeight: FontWeight.w600,
               color: Colors.amber,
             ),
@@ -76,8 +76,8 @@ class _CalendarPageState extends State<CalendarPage> {
               color: Colors.amber,
               shape: BoxShape.circle,
             ),
-            defaultTextStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-            weekendTextStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: Colors.red),
+            defaultTextStyle: GoogleFonts.roboto(fontWeight: FontWeight.w600),
+            weekendTextStyle: GoogleFonts.roboto(fontWeight: FontWeight.w600, color: Colors.red),
           ),
           headerStyle: HeaderStyle(
             formatButtonVisible: true,
@@ -88,7 +88,7 @@ class _CalendarPageState extends State<CalendarPage> {
               borderRadius: BorderRadius.circular(20.0),
             ),
             formatButtonTextStyle: const TextStyle(color: Colors.white),
-            titleTextStyle: GoogleFonts.poppins(
+            titleTextStyle: GoogleFonts.roboto(
               fontSize: 17.0,
               fontWeight: FontWeight.w600,
             ),
@@ -102,7 +102,7 @@ class _CalendarPageState extends State<CalendarPage> {
               return Center(
                 child: Text(
                   text,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.roboto(
                     fontWeight: FontWeight.w600,
                     color: day.weekday == DateTime.sunday || day.weekday == DateTime.saturday 
                         ? Colors.red 
@@ -165,6 +165,7 @@ class _CalendarPageState extends State<CalendarPage> {
       itemBuilder: (context, index) {
         final task = tasksForDate[index];
         return Card(
+          color: Colors.white,
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           elevation: 2,
           shape: RoundedRectangleBorder(
@@ -173,7 +174,7 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
           child: ListTile(
             leading: const Icon(Icons.task_alt, color: Colors.amber),
-            title: Text(task.name, style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+            title: Text(task.name, style: GoogleFonts.roboto(fontWeight: FontWeight.w600)),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
