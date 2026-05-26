@@ -6,10 +6,12 @@ class Task {
   String description;
   double importance;  // 1-3
   double difficulty; // 1-5
+  int rawDifficulty; // For risk calculation
   int remainingDays;
   double urgency;
   double priority;
-
+  bool risk; // Risk
+  String eisenLabel; // Do, Schedule, Backlog
 
   Task({
     required this.name,
@@ -17,9 +19,12 @@ class Task {
     required this.description,
     required this.importance,
     required this.difficulty,
+    required this.rawDifficulty,
     required this.remainingDays,
     required this.urgency,
     this.priority = 0,
+    this.risk = false,
+    this.eisenLabel = '',
   });
 }
 
@@ -93,23 +98,22 @@ double computePriority(double urgency, double importance, double difficulty, boo
   return (0.45 * importance) + (0.40 * urgency) + (0.15 * difficulty);
 }
 
-// RISK
-const Map<int, int> riskBuffer = {1: 2, 2: 4, 3: 7, 4: 10, 5: 14};
-bool isRisk(int remainingDays, int difficulty) {
-  return remainingDays <= riskBuffer[difficulty]!;
-}
-
 // RECOMPUTE THE PRIORITY SCORE EVERY CHANGE!
 void recomputeAll(Schedule schedule) {
   for (Task task in schedule.tasks) {
     task.remainingDays = computeRemainingDays(task.deadline);
     task.urgency = computeUrgency(task.remainingDays);
+    task.risk = computeIsRisk(task.remainingDays, task.rawDifficulty);
   }
   for (Task task in schedule.tasks) {
     bool tiebreak = checkTieBreak(task, schedule.tasks);
     task.priority = computePriority(task.urgency, task.importance, task.difficulty, tiebreak);
   }
   schedule.tasks = selectionSort(schedule.tasks);
+  int listLength = schedule.tasks.length;
+  for(int i = 0; i < listLength; i++) {
+    schedule.tasks[i].eisenLabel = assignEisenLabel(i, listLength);
+  }
 }
 
 // SORT!
@@ -145,3 +149,25 @@ List<Task> selectionSort(List<Task> tasks) {
   }
   return sorted;
 }
+
+// RISK
+const Map<int, int> riskBuffer = {1: 2, 2: 4, 3: 7, 4: 10, 5: 14};
+
+bool computeIsRisk(int remainingDays, int rawDifficulty) {
+  return remainingDays <= riskBuffer[rawDifficulty]!; // IF THE REMAINING DAYS IS LESS THAN BUFFER,ITS RISKY
+  // E.G: REMAINING DAYS = 5, <= (RAWDIFFICULTY = 3 so RISKBUFFER = 7 days)
+  // SINCE 5 <= 7, IT HAS ENTERED RISK WINDOW
+}
+
+// ASSIGN EISENLABEL FOR A TASK
+String assignEisenLabel(int index, int listLength) {
+  if (listLength <= 3) return 'Do'; // IF THERE ARE ONLY 3 TASKS, THEN ALL ARE DO
+
+  final doCount = (listLength * 0.25).ceil().clamp(1, listLength); // CALCULATES TOP 25% AND MAKE THEM DO
+  final schedCount = (listLength * 0.35).ceil().clamp(1, listLength); // CALCULATE THE NEXT 35% AND MAKE THEM SCHEDULE
+
+  if (index < doCount) return 'Do'; // IF INDEX/RANK IS WITHIN TOP 25%, THEY'RE DO
+  if (index < doCount + schedCount) return 'Schedule'; // IF INDEX/RANK IS WITHIN THE NEXT TOP 35%, THEY'RE SCHEDULE
+  return 'Backlog'; // OTHERWISE, THEY'RE BACKLOG
+}
+
