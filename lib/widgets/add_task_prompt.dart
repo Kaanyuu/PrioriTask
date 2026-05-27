@@ -228,6 +228,7 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
   );
 
   if (confirmed == true) {
+    int rawDifficulty = taskDifficulty.toInt();
     int remainingDays = computeRemainingDays(taskDeadline);
     double urgencyScore = computeUrgency(remainingDays);
     double importanceScore = normalizeImportance(taskImportance);
@@ -239,12 +240,14 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
       description: descriptionController.text,
       importance: importanceScore,
       difficulty: difficultyScore,
+      rawDifficulty: rawDifficulty,
       remainingDays: remainingDays,
       urgency: urgencyScore,
     );
 
     bool tieBrake = checkTieBreak(current, currentSchedule.tasks);
     double priorityScore = computePriority(urgencyScore, importanceScore, difficultyScore, tieBrake);
+    bool riskStatus = computeIsRisk(remainingDays, rawDifficulty);
 
     return Task(
       name: nameController.text,
@@ -252,9 +255,11 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
       description: descriptionController.text,
       importance: importanceScore,
       difficulty: difficultyScore,
+      rawDifficulty: rawDifficulty,
       remainingDays: remainingDays,
       urgency: urgencyScore,
       priority: priorityScore,
+      risk: riskStatus,
     );
   }
   return null;
