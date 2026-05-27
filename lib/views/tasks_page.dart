@@ -56,7 +56,7 @@ class _TasksPageState extends State<TasksPage> {
               child: Text(
                 'PrioriTask',
                 style: GoogleFonts.roboto(
-                  fontSize: 18,
+                  fontSize: 19,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
                 ),

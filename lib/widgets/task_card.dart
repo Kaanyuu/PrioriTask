@@ -96,16 +96,16 @@ class TaskCard extends StatelessWidget {
                   // DEADLINE
                   SvgPicture.asset(
                     'assets/calendar.svg',
-                    width: 14,
-                    height: 14,
+                    width: 15,
+                    height: 15,
                     colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
                   ),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: 6),
                   Text(
                     "${task.deadline.year}-${task.deadline.month.toString().padLeft(2, '0')}-${task.deadline.day.toString().padLeft(2, '0')}",
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 30),
 
                   // DIFFICULTY STARS
                   RatingBarIndicator(
@@ -118,7 +118,7 @@ class TaskCard extends StatelessWidget {
                     itemSize: 12.0,
                     direction: Axis.horizontal,
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 30),
 
                   // ADDITIONAL IMPORTANCE INDICATOR
                   Icon(
@@ -129,23 +129,25 @@ class TaskCard extends StatelessWidget {
                         : (task.importance >= 0.6 ? const Color(0xFFF59E0B) : const Color(0xFF10B981)),
                   ),
                   Text(
-                    task.importance >= 0.9 ? 'High' : (task.importance >= 0.6 ? 'Med' : 'Low'),
+                    task.importance >= 0.9 ? 'High' : (task.importance >= 0.6 ? 'Medium' : 'Low'),
                     style: TextStyle(
                       fontSize: 11,
                       color: task.importance >= 0.9
                           ? const Color(0xFFEF4444)
                           : (task.importance >= 0.6 ? const Color(0xFFF59E0B) : const Color(0xFF10B981)),
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 50),
 
-                  // PROGRESS PERCENTAGE (only placeholder yet)
-                  const Icon(Icons.incomplete_circle, size: 14, color: Colors.grey),
-                  const SizedBox(width: 2),
+                  // PROGRESS PERCENTAGE
                   const Text(
                     "0%",
-                    style: TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                      fontSize: 12, 
+                      color: Colors.blueGrey, 
+                      fontWeight: FontWeight.bold
+                    ),
                   ),
                 ],
               ),
