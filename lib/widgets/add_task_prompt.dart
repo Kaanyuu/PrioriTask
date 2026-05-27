@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../models/task.dart';
-import '../main.dart';
 
 Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) async {
   final nameController = TextEditingController();
@@ -153,7 +153,13 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
                 itemCount: 5,
                 itemSize: 30,
                 itemPadding: const EdgeInsets.symmetric(horizontal: 4),
-                itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.amber),
+                itemBuilder: (context, _) => SvgPicture.asset(
+                  'assets/star.svg',
+                  colorFilter: const ColorFilter.mode(
+                    Colors.amber,
+                    BlendMode.srcIn,
+                  ),
+                ),
                 onRatingUpdate: (rating) {
                   setDialogState(() {
                     selectedDifficulty = rating;

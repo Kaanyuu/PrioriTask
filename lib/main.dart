@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'models/task.dart';
-import 'widgets/addTaskPrompt.dart';
+import 'widgets/add_task_prompt.dart';
 import 'views/tasks_page.dart';
 import 'views/calendar_page.dart';
 

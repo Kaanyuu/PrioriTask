@@ -185,11 +185,23 @@ class _CalendarPageState extends State<CalendarPage> {
                 ),
               ],
             ),
-            trailing: Text(
-              task.importance >= 0.9 ? 'High' : (task.importance >= 0.6 ? 'Medium' : 'Low'),
-              style: TextStyle(
-                color: task.importance >= 0.9 ? Colors.red : (task.importance >= 0.6 ? Colors.orange : Colors.green),
-                fontWeight: FontWeight.bold,
+            trailing: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: task.importance >= 0.9 
+                    ? const Color(0xFFEF4444)
+                    : (task.importance >= 0.6 
+                        ? const Color(0xFFF59E0B)
+                        : const Color(0xFF10B981)),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: Text(
+                task.importance >= 0.9 ? 'High' : (task.importance >= 0.6 ? 'Medium' : 'Low'),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 10,
+                ),
               ),
             ),
           ),

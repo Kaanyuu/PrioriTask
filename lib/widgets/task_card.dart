@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/task.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class TaskCard extends StatelessWidget {
   final Task task;
@@ -52,35 +53,99 @@ class TaskCard extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Text(
-                        task.importance >= 0.9 ? 'High' : (task.importance >= 0.6 ? 'Medium' : 'Low'),
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                      // IMPORTANCE BADGE
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
                           color: task.importance >= 0.9 
-                              ? Colors.red 
-                              : (task.importance >= 0.6 ? Colors.orange : Colors.green),
+                              ? const Color(0xFFEF4444) // Rose
+                              : (task.importance >= 0.6 
+                                  ? const Color(0xFFF59E0B)
+                                  : const Color(0xFF10B981)), 
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Text(
+                          task.importance >= 0.9 ? 'High' : (task.importance >= 0.6 ? 'Medium' : 'Low'),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),
                       IconButton(
-                        icon: const Icon(Icons.delete, size: 20, color: Colors.redAccent),
+                        icon: SvgPicture.asset(
+                          'assets/trash-2.svg',
+                          width: 18,
+                          height: 18,
+                          colorFilter: const ColorFilter.mode(
+                            Colors.redAccent,
+                            BlendMode.srcIn,
+                          ),
+                        ),
                         onPressed: onDelete,
-                        constraints: const BoxConstraints(),
-                        padding: EdgeInsets.zero,
                       ),
                     ],
                   ),
                 ],
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 8),
               Row(
                 children: [
-                  const Icon(Icons.calendar_today, size: 14, color: Colors.grey),
+                  // DEADLINE
+                  SvgPicture.asset(
+                    'assets/calendar.svg',
+                    width: 14,
+                    height: 14,
+                    colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+                  ),
                   const SizedBox(width: 4),
                   Text(
-                    "${task.deadline.year}-${task.deadline.month.toString().padLeft(2, '0')}-${task.deadline.day.toString().padLeft(2, '0')}", 
+                    "${task.deadline.year}-${task.deadline.month.toString().padLeft(2, '0')}-${task.deadline.day.toString().padLeft(2, '0')}",
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                  const SizedBox(width: 12),
+
+                  // DIFFICULTY STARS
+                  RatingBarIndicator(
+                    rating: task.difficulty * 5,
+                    itemBuilder: (context, index) => SvgPicture.asset(
+                      'assets/star.svg',
+                      colorFilter: const ColorFilter.mode(Colors.amber, BlendMode.srcIn),
+                    ),
+                    itemCount: 5,
+                    itemSize: 12.0,
+                    direction: Axis.horizontal,
+                  ),
+                  const SizedBox(width: 12),
+
+                  // ADDITIONAL IMPORTANCE INDICATOR
+                  Icon(
+                    Icons.priority_high,
+                    size: 14,
+                    color: task.importance >= 0.9
+                        ? const Color(0xFFEF4444)
+                        : (task.importance >= 0.6 ? const Color(0xFFF59E0B) : const Color(0xFF10B981)),
+                  ),
+                  Text(
+                    task.importance >= 0.9 ? 'High' : (task.importance >= 0.6 ? 'Med' : 'Low'),
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: task.importance >= 0.9
+                          ? const Color(0xFFEF4444)
+                          : (task.importance >= 0.6 ? const Color(0xFFF59E0B) : const Color(0xFF10B981)),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+
+                  // PROGRESS PERCENTAGE (only placeholder yet)
+                  const Icon(Icons.incomplete_circle, size: 14, color: Colors.grey),
+                  const SizedBox(width: 2),
+                  const Text(
+                    "0%",
+                    style: TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.w500),
                   ),
                 ],
               ),
@@ -113,9 +178,12 @@ class TaskCard extends StatelessWidget {
                         ),
                         RatingBarIndicator(
                           rating: task.difficulty * 5,
-                          itemBuilder: (context, index) => const Icon(
-                            Icons.star,
-                            color: Colors.amber,
+                          itemBuilder: (context, index) => SvgPicture.asset(
+                            'assets/star.svg',
+                            colorFilter: const ColorFilter.mode(
+                              Colors.amber,
+                              BlendMode.srcIn,
+                            ),
                           ),
                           itemCount: 5,
                           itemSize: 15.0,
