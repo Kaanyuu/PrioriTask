@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'models/task.dart';
-import 'widgets/add_task_prompt.dart';
-import 'views/tasks_page.dart';
 import 'views/calendar_page.dart';
+import 'views/tasks_page.dart';
+import 'views/settings_page.dart';
+import 'widgets/add_task_prompt.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,7 +40,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   Schedule currentSchedule = Schedule();
   int _selectedIndex = 0;
   final PageController _pageController = PageController();
@@ -89,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
             ),
             CalendarPage(schedule: currentSchedule),
             const Center(child: Text('Matrix View')),
-            const Center(child: Text('Settings View')),
+            SettingsPage(),
           ],
         ),
       ),
@@ -100,10 +101,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
         decoration: BoxDecoration(
           //Color Gradient of FAB
           gradient: const LinearGradient(
-            colors: [
-              Color(0xFFF59E0B),
-              Color(0xFF8B5CF6),
-            ],
+            colors: [Color(0xFFF59E0B), Color(0xFF8B5CF6)],
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
           ),
@@ -166,7 +164,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
                         width: 24,
                         height: 24,
                         colorFilter: ColorFilter.mode(
-                          _selectedIndex == 0 ? const Color(0xFFF59E0B) : const Color(0xFF64748B),
+                          _selectedIndex == 0
+                              ? const Color(0xFFF59E0B)
+                              : const Color(0xFF64748B),
                           BlendMode.srcIn,
                         ),
                       ),
@@ -176,7 +176,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
                         style: GoogleFonts.roboto(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: _selectedIndex == 0 ? const Color(0xFFF59E0B) : const Color(0xFF64748B),
+                          color: _selectedIndex == 0
+                              ? const Color(0xFFF59E0B)
+                              : const Color(0xFF64748B),
                         ),
                       ),
                     ],
@@ -202,7 +204,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
                         width: 24,
                         height: 24,
                         colorFilter: ColorFilter.mode(
-                          _selectedIndex == 1 ? const Color(0xFFF59E0B) : const Color(0xFF64748B),
+                          _selectedIndex == 1
+                              ? const Color(0xFFF59E0B)
+                              : const Color(0xFF64748B),
                           BlendMode.srcIn,
                         ),
                       ),
@@ -212,7 +216,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
                         style: GoogleFonts.roboto(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: _selectedIndex == 1 ? const Color(0xFFF59E0B) : const Color(0xFF64748B),
+                          color: _selectedIndex == 1
+                              ? const Color(0xFFF59E0B)
+                              : const Color(0xFF64748B),
                         ),
                       ),
                     ],
@@ -238,7 +244,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
                         width: 24,
                         height: 24,
                         colorFilter: ColorFilter.mode(
-                          _selectedIndex == 2 ? const Color(0xFFF59E0B) : const Color(0xFF64748B),
+                          _selectedIndex == 2
+                              ? const Color(0xFFF59E0B)
+                              : const Color(0xFF64748B),
                           BlendMode.srcIn,
                         ),
                       ),
@@ -248,7 +256,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
                         style: GoogleFonts.roboto(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: _selectedIndex == 2 ? const Color(0xFFF59E0B) : const Color(0xFF64748B),
+                          color: _selectedIndex == 2
+                              ? const Color(0xFFF59E0B)
+                              : const Color(0xFF64748B),
                         ),
                       ),
                     ],
@@ -274,7 +284,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
                         width: 24,
                         height: 24,
                         colorFilter: ColorFilter.mode(
-                          _selectedIndex == 3 ? const Color(0xFFF59E0B) : const Color(0xFF64748B),
+                          _selectedIndex == 3
+                              ? const Color(0xFFF59E0B)
+                              : const Color(0xFF64748B),
                           BlendMode.srcIn,
                         ),
                       ),
@@ -284,7 +296,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
                         style: GoogleFonts.roboto(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: _selectedIndex == 3 ? const Color(0xFFF59E0B) : const Color(0xFF64748B),
+                          color: _selectedIndex == 3
+                              ? const Color(0xFFF59E0B)
+                              : const Color(0xFF64748B),
                         ),
                       ),
                     ],
