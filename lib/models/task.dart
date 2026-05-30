@@ -1,5 +1,9 @@
 
 
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
+
 class Task {
   String name;
   DateTime deadline;
@@ -169,5 +173,13 @@ String assignEisenLabel(int index, int listLength) {
   if (index < doCount) return 'Do'; // IF INDEX/RANK IS WITHIN TOP 25%, THEY'RE DO
   if (index < doCount + schedCount) return 'Schedule'; // IF INDEX/RANK IS WITHIN THE NEXT TOP 35%, THEY'RE SCHEDULE
   return 'Backlog'; // OTHERWISE, THEY'RE BACKLOG
+}
+
+Color getEisenLabelColor(String band) {
+  switch (band) {
+    case 'Do':       return Color(0xFFEF4444);
+    case 'Schedule': return Color(0xFF6DB3E9);
+    default:         return Color(0xFFADA587);
+  }
 }
 

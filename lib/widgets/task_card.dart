@@ -53,19 +53,19 @@ class TaskCard extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      // IMPORTANCE BADGE
+                      // EISENLABLE BADGE
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: task.importance >= 0.9 
+                          color: task.eisenLabel == 'Do'
                               ? const Color(0xFFEF4444) // Rose
-                              : (task.importance >= 0.6 
-                                  ? const Color(0xFFF59E0B)
-                                  : const Color(0xFF10B981)), 
+                              : (task.eisenLabel == 'Schedule'
+                                  ? const Color(0xFF6DB3E9)
+                                  : const Color(0xFFADA587)),
                           borderRadius: BorderRadius.circular(30),
                         ),
                         child: Text(
-                          task.importance >= 0.9 ? 'High' : (task.importance >= 0.6 ? 'Medium' : 'Low'),
+                          task.eisenLabel,
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
