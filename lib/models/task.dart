@@ -16,6 +16,7 @@ class Task {
   double priority;
   bool risk; // Risk
   String eisenLabel; // Do, Schedule, Backlog
+  int progress; // progress;
 
   Task({
     required this.name,
@@ -29,6 +30,7 @@ class Task {
     this.priority = 0,
     this.risk = false,
     this.eisenLabel = '',
+    this.progress = 0,
   });
 }
 
