@@ -1,3 +1,4 @@
+// lib/views/settings_page.dart
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -13,10 +14,6 @@ class _SettingsPageState extends State<SettingsPage> {
   bool _darkMode = false;
   bool _notifications = true;
   bool _sounds = true;
-
-  // User info (replace with real data / provider)
-  final String _userName = 'James Rafael Pogi';
-  final String _userEmail = 'jamesGwapings@email.com';
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +38,8 @@ class _SettingsPageState extends State<SettingsPage> {
       body: ListView(
         padding: const EdgeInsets.only(bottom: 32),
         children: [
-          // ── Account ──────────────────────────────────────────
-          _sectionLabel('ACCOUNT'),
-          _profileCard(),
+          // ── Banner ───────────────────────────────────────────
+          _bannerCard(),
 
           // ── Preferences ──────────────────────────────────────
           _sectionLabel('PREFERENCES'),
@@ -133,37 +129,34 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ],
           ),
-
-          // ── Sign Out ──────────────────────────────────────────
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            child: MaterialButton(
-              onPressed: _confirmSignOut,
-              height: 52,
-              color: const Color(0xFFFFF0F1),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14),
-                side: const BorderSide(color: Color(0xFFFFD6D8)),
-              ),
-              elevation: 0,
-              highlightElevation: 0,
-              child: Text(
-                'Sign Out',
-                style: GoogleFonts.roboto(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFFFF4757),
-                ),
-              ),
-            ),
-          ),
         ],
       ),
     );
   }
 
   // ─── Reusable widgets ────────────────────────────────────────────────────
+
+  Widget _bannerCard() => Padding(
+    padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+    child: Center(
+      child: ShaderMask(
+        shaderCallback: (bounds) => const LinearGradient(
+          colors: [Color(0xFFF59E0B), Color(0xFF8B5CF6)],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ).createShader(bounds),
+        child: Text(
+          'PrioriTask',
+          style: GoogleFonts.spaceGrotesk(
+            fontSize: 40,
+            fontWeight: FontWeight.w800,
+            color: Colors.white, // must be white for ShaderMask to work
+            letterSpacing: -1,
+          ),
+        ),
+      ),
+    ),
+  );
 
   Widget _sectionLabel(String text) => Padding(
     padding: const EdgeInsets.fromLTRB(24, 18, 24, 8),
@@ -186,68 +179,6 @@ class _SettingsPageState extends State<SettingsPage> {
       border: Border.all(color: const Color(0xFFECEEF2), width: 0.5),
     ),
     child: Column(children: children),
-  );
-
-  Widget _profileCard() => Container(
-    margin: const EdgeInsets.symmetric(horizontal: 14),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: const Color(0xFFECEEF2), width: 0.5),
-    ),
-    child: InkWell(
-      borderRadius: BorderRadius.circular(16),
-      onTap: () => _showSnack('Edit profile coming soon'),
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Row(
-          children: [
-            // Avatar
-            CircleAvatar(
-              radius: 26,
-              backgroundColor: const Color(0xFF5B5FEE),
-              child: Text(
-                _initials(_userName),
-                style: GoogleFonts.roboto(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 18,
-                ),
-              ),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _userName,
-                    style: GoogleFonts.roboto(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF1A1A2E),
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    _userEmail,
-                    style: GoogleFonts.roboto(
-                      fontSize: 13,
-                      color: const Color(0xFF9096A2),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Icon(
-              Icons.chevron_right_rounded,
-              color: Color(0xFFC5C8D0),
-              size: 20,
-            ),
-          ],
-        ),
-      ),
-    ),
   );
 
   Widget _toggleRow({
@@ -354,57 +285,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
   // ─── Helpers ────────────────────────────────────────────────────────────
 
-  String _initials(String name) {
-    final parts = name.trim().split(' ');
-    if (parts.length >= 2) {
-      return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
-    }
-    return parts[0][0].toUpperCase();
-  }
-
   void _showSnack(String msg) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(msg), duration: const Duration(seconds: 2)),
-    );
-  }
-
-  void _confirmSignOut() {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(
-          'Sign Out',
-          style: GoogleFonts.roboto(fontWeight: FontWeight.w700),
-        ),
-        content: Text(
-          'Are you sure you want to sign out?',
-          style: GoogleFonts.roboto(),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(
-              'Cancel',
-              style: GoogleFonts.roboto(color: const Color(0xFF9096A2)),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              _showSnack('Signed out');
-              // Navigate to login screen here
-            },
-            child: Text(
-              'Sign Out',
-              style: GoogleFonts.roboto(
-                color: const Color(0xFFFF4757),
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
