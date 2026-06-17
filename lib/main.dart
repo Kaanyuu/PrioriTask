@@ -5,6 +5,7 @@ import 'models/task.dart';
 import 'views/calendar_page.dart';
 import 'views/tasks_page.dart';
 import 'views/settings_page.dart';
+import 'views/matrix_page.dart';
 import 'widgets/add_task_prompt.dart';
 
 void main() {
@@ -50,6 +51,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     super.initState();
     // Adds an observer to react whenever the app resumes in background
     WidgetsBinding.instance.addObserver(this);
+    if (currentSchedule.tasks.isEmpty) {
+      loadDefaultTasks(currentSchedule);
+    }
     recomputeAll(currentSchedule);
   }
 
@@ -87,9 +91,22 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                   recomputeAll(currentSchedule);
                 });
               },
+              onTaskCompleted: (index) {
+                setState(() {
+                  currentSchedule.tasks.removeAt(index);
+                  recomputeAll(currentSchedule);
+                });
+            },
+              onTaskEdit: (index, updatedTask) {
+                setState(() {
+                  currentSchedule.tasks[index] = updatedTask;
+                  recomputeAll(currentSchedule);
+                });
+                // saveSchedules([currentSchedule]);
+              },
             ),
             CalendarPage(schedule: currentSchedule),
-            const Center(child: Text('Matrix View')),
+            MatrixPage(schedule: currentSchedule),
             SettingsPage(),
           ],
         ),

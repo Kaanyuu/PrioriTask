@@ -3,35 +3,40 @@ import '../models/task.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class TaskCard extends StatelessWidget {
+class TaskCard extends StatefulWidget {
   final Task task;
-  final VoidCallback onDelete;
+  final VoidCallback onEdit;
   final bool isExpanded;
   final VoidCallback onTap;
 
   const TaskCard({
     super.key,
     required this.task,
-    required this.onDelete,
+    required this.onEdit,
     required this.isExpanded,
     required this.onTap,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
+  State<TaskCard> createState() => _TaskCardState();
+}
+
+  class _TaskCardState extends State<TaskCard> {
+
+  @override
+  Widget build(BuildContext context) => Card(
       color: Colors.white,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      elevation: isExpanded ? 4 : 1,
+      elevation: widget.isExpanded ? 4 : 1,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: isExpanded ? Colors.amber : Colors.transparent,
+          color: widget.isExpanded ? Colors.amber : Colors.transparent,
           width: 1,
         ),
       ),
       child: InkWell(
-        onTap: onTap,
+        onTap: widget.onTap,
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -43,29 +48,29 @@ class TaskCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      task.name,
+                      widget.task.name,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
-                        color: isExpanded ? Colors.amber[800] : Colors.black87,
+                        color: widget.isExpanded ? Colors.amber[800] : Colors.black87,
                       ),
                     ),
                   ),
                   Row(
                     children: [
-                      // IMPORTANCE BADGE
+                      // EISENLABLE BADGE
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: task.importance >= 0.9 
+                          color: widget.task.eisenLabel == 'Do'
                               ? const Color(0xFFEF4444) // Rose
-                              : (task.importance >= 0.6 
-                                  ? const Color(0xFFF59E0B)
-                                  : const Color(0xFF10B981)), 
+                              : (widget.task.eisenLabel == 'Schedule'
+                                  ? const Color(0xFF6DB3E9)
+                                  : const Color(0xFFADA587)),
                           borderRadius: BorderRadius.circular(30),
                         ),
                         child: Text(
-                          task.importance >= 0.9 ? 'High' : (task.importance >= 0.6 ? 'Medium' : 'Low'),
+                          widget.task.eisenLabel,
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -76,15 +81,15 @@ class TaskCard extends StatelessWidget {
                       const SizedBox(width: 8),
                       IconButton(
                         icon: SvgPicture.asset(
-                          'assets/trash-2.svg',
+                          'assets/writing.svg',
                           width: 18,
-                          height: 18,
+                          height: 20,
                           colorFilter: const ColorFilter.mode(
-                            Colors.redAccent,
+                            Colors.amber,
                             BlendMode.srcIn,
                           ),
                         ),
-                        onPressed: onDelete,
+                        onPressed: widget.onEdit,
                       ),
                     ],
                   ),
@@ -102,14 +107,14 @@ class TaskCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 6),
                   Text(
-                    "${task.deadline.year}-${task.deadline.month.toString().padLeft(2, '0')}-${task.deadline.day.toString().padLeft(2, '0')}",
+                    "${widget.task.deadline.year}-${widget.task.deadline.month.toString().padLeft(2, '0')}-${widget.task.deadline.day.toString().padLeft(2, '0')}",
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                   const SizedBox(width: 30),
 
                   // DIFFICULTY STARS
                   RatingBarIndicator(
-                    rating: task.difficulty * 5,
+                    rating: widget.task.difficulty * 5,
                     itemBuilder: (context, index) => SvgPicture.asset(
                       'assets/star.svg',
                       colorFilter: const ColorFilter.mode(Colors.amber, BlendMode.srcIn),
@@ -119,36 +124,48 @@ class TaskCard extends StatelessWidget {
                     direction: Axis.horizontal,
                   ),
                   const SizedBox(width: 30),
-
                   // ADDITIONAL IMPORTANCE INDICATOR
                   Icon(
                     Icons.priority_high,
                     size: 14,
-                    color: task.importance >= 0.9
+                    color: widget.task.importance >= 0.9
                         ? const Color(0xFFEF4444)
-                        : (task.importance >= 0.6 ? const Color(0xFFF59E0B) : const Color(0xFF10B981)),
+                        : (widget.task.importance >= 0.6 ? const Color(0xFFF59E0B) : const Color(0xFF10B981)),
                   ),
                   Text(
-                    task.importance >= 0.9 ? 'High' : (task.importance >= 0.6 ? 'Medium' : 'Low'),
+                    widget.task.importance >= 0.9 ? 'High' : (widget.task.importance >= 0.6 ? 'Mid ' : 'Low'),
                     style: TextStyle(
                       fontSize: 11,
-                      color: task.importance >= 0.9
+                      color: widget.task.importance >= 0.9
                           ? const Color(0xFFEF4444)
-                          : (task.importance >= 0.6 ? const Color(0xFFF59E0B) : const Color(0xFF10B981)),
+                          : (widget.task.importance >= 0.6 ? const Color(0xFFF59E0B) : const Color(0xFF10B981)),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(width: 50),
+                  const SizedBox(width: 30),
 
                   // PROGRESS PERCENTAGE
-                  const Text(
-                    "0%",
-                    style: TextStyle(
-                      fontSize: 12, 
-                      color: Colors.blueGrey, 
+                  SizedBox(
+                    width: 12,
+                    height: 12,
+                    child: CircularProgressIndicator.adaptive(
+                      value: widget.task.progress / 100,
+                      strokeWidth: 3,
+                      backgroundColor: Colors.grey.shade300,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Colors.amber,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    " ${widget.task.progress}%",
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.blueGrey,
                       fontWeight: FontWeight.bold
                     ),
                   ),
+                  const SizedBox(width: 30),
                 ],
               ),
               // Expanding Animation
@@ -164,38 +181,40 @@ class TaskCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      task.description.isEmpty ? "No description" : task.description,
+                      widget.task.description.isEmpty ? "No description" : widget.task.description,
                       style: TextStyle(
                         fontSize: 14,
-                        color: task.description.isEmpty ? Colors.grey : Colors.black87,
-                        fontStyle: task.description.isEmpty ? FontStyle.italic : FontStyle.normal,
+                        color: widget.task.description.isEmpty ? Colors.grey : Colors.black87,
+                        fontStyle: widget.task.description.isEmpty ? FontStyle.italic : FontStyle.normal,
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Row(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          "Difficulty: ",
+                          "Progress:",
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                         ),
-                        RatingBarIndicator(
-                          rating: task.difficulty * 5,
-                          itemBuilder: (context, index) => SvgPicture.asset(
-                            'assets/star.svg',
-                            colorFilter: const ColorFilter.mode(
-                              Colors.amber,
-                              BlendMode.srcIn,
-                            ),
-                          ),
-                          itemCount: 5,
-                          itemSize: 15.0,
-                          direction: Axis.horizontal,
+                        Slider.adaptive(
+                          value: widget.task.progress.toDouble(),
+                          min: 0,
+                          max: 100,
+                          divisions: 4,
+                          label: "${widget.task.progress.round()}%",
+                          inactiveColor: Colors.amber.shade300,
+                          activeColor: Colors.amber.shade600,
+                          onChanged: (value) {
+                            setState(() {
+                              widget.task.progress = value.round();
+                            });
+                          },
                         ),
                       ],
                     ),
                   ],
                 ),
-                crossFadeState: isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                crossFadeState: widget.isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
                 duration: const Duration(milliseconds: 300),
               ),
             ],
@@ -203,5 +222,4 @@ class TaskCard extends StatelessWidget {
         ),
       ),
     );
-  }
 }

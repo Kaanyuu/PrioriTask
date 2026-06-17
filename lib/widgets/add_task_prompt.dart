@@ -368,6 +368,7 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
       rawDifficulty: rawDifficulty,
       remainingDays: remainingDays,
       urgency: urgencyScore,
+      progress: 0,
     );
 
     bool tieBrake = checkTieBreak(current, currentSchedule.tasks);
@@ -385,6 +386,7 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
       urgency: urgencyScore,
       priority: priorityScore,
       risk: riskStatus,
+      progress: 0,
     );
   }
   return null;
