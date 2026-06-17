@@ -53,7 +53,7 @@ class MatrixPage extends StatelessWidget {
         children: [
           Text(
             eisenLabel,
-            style: GoogleFonts.roboto(
+            style: GoogleFonts.inter(
               fontSize: 19,
               fontWeight: FontWeight.w600,
               color: color,

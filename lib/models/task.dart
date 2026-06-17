@@ -157,11 +157,12 @@ List<Task> selectionSort(List<Task> tasks) {
 }
 
 // RISK
-const Map<int, int> riskBuffer = {1: 2, 2: 4, 3: 7, 4: 10, 5: 14};
+const Map<int, int> riskBuffer = {1: 2, 2: 4, 3: 6, 4: 7, 5: 14};
 
 bool computeIsRisk(int remainingDays, int rawDifficulty) {
+
   return remainingDays <= riskBuffer[rawDifficulty]!; // IF THE REMAINING DAYS IS LESS THAN BUFFER,ITS RISKY
-  // E.G: REMAINING DAYS = 5, <= (RAWDIFFICULTY = 3 so RISKBUFFER = 7 days)
+  // E.G: REMAINING DAYS = 5, <= (RAWDIFFICULTY = 3 so  RISKBUFFER = 7 days)
   // SINCE 5 <= 7, IT HAS ENTERED RISK WINDOW
 }
 
@@ -225,4 +226,19 @@ void loadDefaultTasks(Schedule currentSchedule) {
     ]);
   }
 }
+
+// FOR INFO/TOOL TIP IN ADD TASK PROMPT
+const String difficultyInfo =
+    'You may use these as reference for choosing difficulty:\n'
+    '1★ Assignments — within three days\n'
+    '2★ Short Essays — within five days\n'
+    '3★ Exam Review — within seven days\n'
+    '4★ Performance Task — more than a week\n'
+    '5★ Project — more than two weeks';
+
+const String importanceInfo =
+    'You may use these as reference for choosing importance:\n'
+    'Low — no real consequences if delayed\n'
+    'Medium — matters, but not critical\n'
+    'High — must be done, real consequences';
 

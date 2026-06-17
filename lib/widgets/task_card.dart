@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import '../models/task.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:popover/popover.dart';
+import '../views/tasks_page.dart';
 
 class TaskCard extends StatefulWidget {
   final Task task;
+  final int index;
+  final Function(int) onTaskCompleted;
   final VoidCallback onEdit;
   final bool isExpanded;
   final VoidCallback onTap;
@@ -12,6 +16,8 @@ class TaskCard extends StatefulWidget {
   const TaskCard({
     super.key,
     required this.task,
+    required this.index,
+    required this.onTaskCompleted,
     required this.onEdit,
     required this.isExpanded,
     required this.onTap,
@@ -123,7 +129,7 @@ class TaskCard extends StatefulWidget {
                     itemSize: 12.0,
                     direction: Axis.horizontal,
                   ),
-                  const SizedBox(width: 30),
+                  const SizedBox(width: 20),
                   // ADDITIONAL IMPORTANCE INDICATOR
                   Icon(
                     Icons.priority_high,
@@ -180,12 +186,26 @@ class TaskCard extends StatefulWidget {
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      widget.task.description.isEmpty ? "No description" : widget.task.description,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: widget.task.description.isEmpty ? Colors.grey : Colors.black87,
-                        fontStyle: widget.task.description.isEmpty ? FontStyle.italic : FontStyle.normal,
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        widget.task.description.isEmpty
+                            ? "No description"
+                            : widget.task.description,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: widget.task.description.isEmpty
+                              ? Colors.grey
+                              : Colors.black87,
+                          fontStyle: widget.task.description.isEmpty
+                              ? FontStyle.italic
+                              : FontStyle.normal,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -202,13 +222,62 @@ class TaskCard extends StatefulWidget {
                           max: 100,
                           divisions: 4,
                           label: "${widget.task.progress.round()}%",
-                          inactiveColor: Colors.amber.shade300,
+                          inactiveColor: Colors.grey.shade300,
                           activeColor: Colors.amber.shade600,
                           onChanged: (value) {
                             setState(() {
                               widget.task.progress = value.round();
                             });
                           },
+                          onChangeEnd: (value) async {
+                            if (value.round() == 100) {
+                              final confirmed = await _confirmComplete(context, widget.task);
+                              if (confirmed) {
+                                setState(() {
+                                  widget.onTaskCompleted(widget.index);
+                                });
+                              }
+                              else {
+                                setState(() {
+                                  widget.task.progress = 75;
+                                });
+                              };
+                            };
+                          },
+                        ),
+                      ],
+                    ),
+                    const Divider(height: 20),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildMetricCard(
+                            icon: Icons.calendar_today_rounded,
+                            iconColor: Colors.blue,
+                            label: 'Time Left',
+                            value: '${widget.task.remainingDays} Days',
+                            backgroundColor: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: _buildMetricCard(
+                            icon: Icons.warning_amber_rounded,
+                            iconColor: Colors.orange,
+                            label: 'Risk Status',
+                            value: widget.task.risk ? 'Risky' : 'Not Risky',
+                            backgroundColor: widget.task.risk ? Colors.red.shade50 : Colors.white,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: _buildMetricCard(
+                            icon: Icons.computer_rounded,
+                            iconColor: Colors.red,
+                            label: 'P-Value',
+                            value: '${widget.task.priority.toStringAsFixed(3)}',
+                            backgroundColor: Colors.white,
+                          ),
                         ),
                       ],
                     ),
@@ -222,4 +291,117 @@ class TaskCard extends StatefulWidget {
         ),
       ),
     );
+
+  // CONFIRM COMPLETE (DON'T CHANGE)
+  bool dontShowAgainComplete = false;
+  Future<bool> _confirmComplete(BuildContext context, Task task) async {
+    if (dontShowAgainComplete) {
+      return true; // skip dialog entirely if user opted out
+    }
+
+    bool tempDontShow = false;
+
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: const Text('Mark as complete?'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Complete "${task.name}"?'),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Checkbox(
+                    value: tempDontShow,
+                    onChanged: (value) {
+                      setDialogState(() {
+                        tempDontShow = value ?? false;
+                      });
+                    },
+                  ),
+                  const Text('Don\'t show this again', style: TextStyle(fontSize: 13)),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Complete'),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (result == true && tempDontShow) {
+      setState(() {
+        dontShowAgainComplete = true;
+      });
+    }
+
+    return result ?? false;
+  }
 }
+
+// FOR METRIC CARDS ON LAST ROW
+Widget _buildMetricCard({
+  required IconData icon,
+  required Color iconColor,
+  required String label,
+  required String value,
+  required Color backgroundColor,
+}) {
+  return Container(
+    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+    decoration: BoxDecoration(
+      color: backgroundColor,
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(
+        color: Colors.grey.shade200, // Subtle border like your original UI
+        width: 1,
+      ),
+    ),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: iconColor, size: 16),
+            const SizedBox(width: 4),
+            Flexible(
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+

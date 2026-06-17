@@ -67,7 +67,7 @@ class _CalendarPageState extends State<CalendarPage> {
               border: Border.all(color: Colors.amber, width: 2),
               shape: BoxShape.circle,
             ),
-            todayTextStyle: GoogleFonts.roboto(
+            todayTextStyle: GoogleFonts.inter(
               fontWeight: FontWeight.w600,
               color: Colors.amber,
             ),
@@ -76,8 +76,8 @@ class _CalendarPageState extends State<CalendarPage> {
               color: Colors.amber,
               shape: BoxShape.circle,
             ),
-            defaultTextStyle: GoogleFonts.roboto(fontWeight: FontWeight.w600),
-            weekendTextStyle: GoogleFonts.roboto(fontWeight: FontWeight.w600, color: Colors.red),
+            defaultTextStyle: GoogleFonts.inter(fontWeight: FontWeight.w600),
+            weekendTextStyle: GoogleFonts.inter(fontWeight: FontWeight.w600, color: Colors.red),
           ),
           headerStyle: HeaderStyle(
             formatButtonVisible: true,
@@ -88,7 +88,7 @@ class _CalendarPageState extends State<CalendarPage> {
               borderRadius: BorderRadius.circular(20.0),
             ),
             formatButtonTextStyle: const TextStyle(color: Colors.white),
-            titleTextStyle: GoogleFonts.roboto(
+            titleTextStyle: GoogleFonts.inter(
               fontSize: 17.0,
               fontWeight: FontWeight.w600,
             ),
@@ -102,7 +102,7 @@ class _CalendarPageState extends State<CalendarPage> {
               return Center(
                 child: Text(
                   text,
-                  style: GoogleFonts.roboto(
+                  style: GoogleFonts.inter(
                     fontWeight: FontWeight.w600,
                     color: day.weekday == DateTime.sunday || day.weekday == DateTime.saturday 
                         ? Colors.red 
@@ -174,7 +174,7 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
           child: ListTile(
             leading: const Icon(Icons.task_alt, color: Colors.amber),
-            title: Text(task.name, style: GoogleFonts.roboto(fontWeight: FontWeight.w600)),
+            title: Text(task.name, style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

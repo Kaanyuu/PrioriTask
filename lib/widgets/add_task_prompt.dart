@@ -3,6 +3,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:popover/popover.dart';
 import '../models/task.dart';
 
 Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) async {
@@ -26,20 +27,20 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
         actionsPadding: const EdgeInsets.only(right: 24, bottom: 12),
         title: Text(
           'Task Name',
-          style: GoogleFonts.roboto(fontWeight: FontWeight.bold, fontSize: 18),
+          style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 18),
         ),
         content: SizedBox(
           width: double.maxFinite,
           child: TextField(
             controller: nameController,
             autofocus: true,
-            style: GoogleFonts.roboto(fontSize: 14),
+            style: GoogleFonts.inter(fontSize: 14),
             onChanged: (value) {
               setDialogState(() {});
             },
             decoration: InputDecoration(
               hintText: "What needs to be done?",
-              hintStyle: GoogleFonts.roboto(fontSize: 14, color: Colors.grey.withValues(alpha: 0.6)),
+              hintStyle: GoogleFonts.inter(fontSize: 14, color: Colors.grey.withValues(alpha: 0.6)),
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
@@ -63,7 +64,7 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
             ),
-            child: Text('Cancel', style: GoogleFonts.roboto(color: Colors.grey, fontWeight: FontWeight.w500)),
+            child: Text('Cancel', style: GoogleFonts.inter(color: Colors.grey, fontWeight: FontWeight.w500)),
           ),
           ElevatedButton(
             onPressed: nameController.text.isEmpty
@@ -80,7 +81,7 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
               elevation: 0,
             ),
-            child: Text('Next', style: GoogleFonts.roboto(fontWeight: FontWeight.bold)),
+            child: Text('Next', style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -106,7 +107,7 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
         actionsPadding: const EdgeInsets.only(right: 24, bottom: 12),
         title: Text(
           'Select Deadline',
-          style: GoogleFonts.roboto(fontWeight: FontWeight.bold, fontSize: 18),
+          style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 18),
         ),
         content: SizedBox(
           width: double.maxFinite,
@@ -122,23 +123,23 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
                 headerStyle: HeaderStyle(
                   formatButtonVisible: false,
                   titleCentered: true,
-                  titleTextStyle: GoogleFonts.roboto(fontWeight: FontWeight.w600, fontSize: 16),
+                  titleTextStyle: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 16),
                   leftChevronIcon: const Icon(Icons.chevron_left, color: Colors.black54),
                   rightChevronIcon: const Icon(Icons.chevron_right, color: Colors.black54),
                 ),
                 daysOfWeekStyle: DaysOfWeekStyle(
-                  weekdayStyle: GoogleFonts.roboto(color: Colors.grey, fontSize: 12),
-                  weekendStyle: GoogleFonts.roboto(color: Colors.grey, fontSize: 12),
+                  weekdayStyle: GoogleFonts.inter(color: Colors.grey, fontSize: 12),
+                  weekendStyle: GoogleFonts.inter(color: Colors.grey, fontSize: 12),
                 ),
                 calendarStyle: CalendarStyle(
                   outsideDaysVisible: false,
-                  defaultTextStyle: GoogleFonts.roboto(fontSize: 14),
-                  weekendTextStyle: GoogleFonts.roboto(fontSize: 14),
+                  defaultTextStyle: GoogleFonts.inter(fontSize: 14),
+                  weekendTextStyle: GoogleFonts.inter(fontSize: 14),
                   todayDecoration: BoxDecoration(
                     color: Colors.amber.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
-                  todayTextStyle: GoogleFonts.roboto(color: Colors.amber, fontWeight: FontWeight.bold),
+                  todayTextStyle: GoogleFonts.inter(color: Colors.amber, fontWeight: FontWeight.bold),
                   selectedDecoration: const BoxDecoration(
                     color: Colors.amber,
                     shape: BoxShape.circle,
@@ -164,7 +165,7 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
                       ? 'No date selected'
                       : _formatFullDate(selectedDay!),
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.roboto(
+                  style: GoogleFonts.inter(
                     fontWeight: FontWeight.w500,
                     color: Colors.black87,
                   ),
@@ -180,7 +181,7 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
             ),
-            child: Text('Cancel', style: GoogleFonts.roboto(color: Colors.grey, fontWeight: FontWeight.w500)),
+            child: Text('Cancel', style: GoogleFonts.inter(color: Colors.grey, fontWeight: FontWeight.w500)),
           ),
           ElevatedButton(
             onPressed: selectedDay == null
@@ -195,7 +196,7 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
               elevation: 0,
             ),
-            child: Text('Next', style: GoogleFonts.roboto(fontWeight: FontWeight.bold)),
+            child: Text('Next', style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -218,7 +219,7 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
         actionsPadding: const EdgeInsets.only(right: 24, bottom: 12),
         title: Text(
           'Final Details',
-          style: GoogleFonts.roboto(fontWeight: FontWeight.bold, fontSize: 18),
+          style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 18),
         ),
         content: SizedBox(
           width: double.maxFinite,
@@ -229,11 +230,11 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
                 // DESCRIPTION
                 TextField(
                   controller: descriptionController,
-                  style: GoogleFonts.roboto(fontSize: 14),
+                  style: GoogleFonts.inter(fontSize: 14),
                   maxLines: 3,
                   decoration: InputDecoration(
                     labelText: 'Description',
-                    labelStyle: GoogleFonts.roboto(color: Colors.grey, fontSize: 14),
+                    labelStyle: GoogleFonts.inter(color: Colors.grey, fontSize: 14),
                     alignLabelWithHint: true,
                     contentPadding: const EdgeInsets.all(16),
                     border: OutlineInputBorder(
@@ -253,14 +254,36 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
               const SizedBox(height: 16),
 
               // DIFFICULTY
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Difficulty',
-                  style: GoogleFonts.roboto(fontSize: 13, fontWeight: FontWeight.w600),
-                ),
-              ),
-              const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Difficulty',
+                        style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    PopupMenuButton<void>(
+                      icon: Icon(Icons.info_outline, size: 14, color: Colors.grey,),
+                      padding: EdgeInsets.zero,
+                      color: Colors.white,
+                      itemBuilder: (context) => [
+                        PopupMenuItem<void>(
+                          enabled: false,
+                            child: Text(
+                              difficultyInfo,
+                              style: GoogleFonts.inter(
+                                  fontSize: 12,
+                                  height: 1.6,
+                                  color: Colors.black54,
+                              ),
+                        ),
+                        ),
+                      ],
+                    )
+            ],
+          ),
               RatingBar.builder(
                 initialRating: taskDifficulty,
                 minRating: 1,
@@ -285,14 +308,36 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
               const SizedBox(height: 16),
 
               // IMPORTANCE
-              Align(
+                Row(
+              children: [
+                Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Importance',
-                  style: GoogleFonts.roboto(fontSize: 13, fontWeight: FontWeight.w600),
+                  style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600),
                 ),
               ),
               const SizedBox(height: 8),
+                PopupMenuButton<void>(
+                  icon: Icon(Icons.info_outline, size: 14, color: Colors.grey,),
+                  padding: EdgeInsets.zero,
+                  color: Colors.white,
+                  itemBuilder: (context) => [
+                    PopupMenuItem<void>(
+                      enabled: false,
+                        child: Text(
+                          importanceInfo,
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            height: 1.2,
+                            color: Colors.black54,
+                          ),
+                      ),
+                    ),
+                  ],
+                )
+          ],
+          ),
               Row(
                 children: [
                   _buildImportanceOption(
@@ -334,7 +379,7 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
             ),
-            child: Text('Cancel', style: GoogleFonts.roboto(color: Colors.grey, fontWeight: FontWeight.w500)),
+            child: Text('Cancel', style: GoogleFonts.inter(color: Colors.grey, fontWeight: FontWeight.w500)),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
@@ -345,7 +390,7 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
               elevation: 0,
             ),
-            child: Text('Add Task', style: GoogleFonts.roboto(fontWeight: FontWeight.bold)),
+            child: Text('Add Task', style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -414,7 +459,7 @@ Widget _buildImportanceOption({
         child: Center(
           child: Text(
             label,
-            style: GoogleFonts.roboto(
+            style: GoogleFonts.inter(
               fontSize: 12,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
               color: isSelected ? Colors.white : const Color(0xFF64748B),

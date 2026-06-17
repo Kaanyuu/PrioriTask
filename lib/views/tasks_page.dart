@@ -60,7 +60,7 @@ class _TasksPageState extends State<TasksPage> {
               ),
               child: Text(
                 'PrioriTask',
-                style: GoogleFonts.roboto(
+                style: GoogleFonts.inter(
                   fontSize: 19,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
@@ -88,7 +88,7 @@ class _TasksPageState extends State<TasksPage> {
                       const SizedBox(height: 8),
                       Text(
                         'No tasks yet. Tap + to add one!',
-                        style: GoogleFonts.roboto(
+                        style: GoogleFonts.inter(
                           color: Colors.grey,
                           fontSize: 16,
                         ),
@@ -137,6 +137,8 @@ class _TasksPageState extends State<TasksPage> {
 
                       child: TaskCard(
                         task: task,
+                        index: index,
+                        onTaskCompleted: widget.onTaskCompleted,
                         isExpanded: _expandedIndex == index,
                         // TAP TO EXPAND
                         onTap: () {

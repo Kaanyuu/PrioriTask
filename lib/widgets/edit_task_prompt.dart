@@ -25,7 +25,7 @@ Future<Task?> showEditTaskForm(BuildContext context, Schedule currentSchedule, i
         titlePadding: const EdgeInsets.only(top: 20, left: 24, right: 24, bottom: 10),
         contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
         actionsPadding: const EdgeInsets.only(right: 24, bottom: 12),
-        title: Text('Edit Task', style: GoogleFonts.roboto(fontWeight: FontWeight.bold, fontSize: 18)),
+        title: Text('Edit Task', style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 18)),
         content: SizedBox(
           width: double.maxFinite,
           child: SingleChildScrollView(
@@ -34,11 +34,11 @@ Future<Task?> showEditTaskForm(BuildContext context, Schedule currentSchedule, i
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // NAME
-                Text('Name', style: GoogleFonts.roboto(fontSize: 13, fontWeight: FontWeight.w600)),
+                Text('Name', style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 4),
                 TextField(
                   controller: nameController,
-                  style: GoogleFonts.roboto(fontSize: 14),
+                  style: GoogleFonts.inter(fontSize: 14),
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                     border: OutlineInputBorder(
@@ -54,11 +54,11 @@ Future<Task?> showEditTaskForm(BuildContext context, Schedule currentSchedule, i
                 const SizedBox(height: 16),
 
                 // DESCRIPTION
-                Text('Description', style: GoogleFonts.roboto(fontSize: 13, fontWeight: FontWeight.w600)),
+                Text('Description', style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 4),
                 TextField(
                   controller: descriptionController,
-                  style: GoogleFonts.roboto(fontSize: 14),
+                  style: GoogleFonts.inter(fontSize: 14),
                   maxLines: 3,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(16),
@@ -75,7 +75,7 @@ Future<Task?> showEditTaskForm(BuildContext context, Schedule currentSchedule, i
                 const SizedBox(height: 16),
 
                 // DEADLINE — opens the TableCalendar dialog
-                Text('Deadline', style: GoogleFonts.roboto(fontSize: 13, fontWeight: FontWeight.w600)),
+                Text('Deadline', style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 4),
                 GestureDetector(
                   onTap: () async {
@@ -96,7 +96,7 @@ Future<Task?> showEditTaskForm(BuildContext context, Schedule currentSchedule, i
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(_formatFullDate(taskDeadline), style: GoogleFonts.roboto(fontSize: 14)),
+                        Text(_formatFullDate(taskDeadline), style: GoogleFonts.inter(fontSize: 14)),
                         const Icon(Icons.calendar_today, size: 18, color: Colors.amber),
                       ],
                     ),
@@ -105,7 +105,7 @@ Future<Task?> showEditTaskForm(BuildContext context, Schedule currentSchedule, i
                 const SizedBox(height: 16),
 
                 // DIFFICULTY
-                Text('Difficulty', style: GoogleFonts.roboto(fontSize: 13, fontWeight: FontWeight.w600)),
+                Text('Difficulty', style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 4),
                 RatingBar.builder(
                   initialRating: taskDifficulty,
@@ -131,7 +131,7 @@ Future<Task?> showEditTaskForm(BuildContext context, Schedule currentSchedule, i
                 const SizedBox(height: 16),
 
                 // IMPORTANCE
-                Text('Importance', style: GoogleFonts.roboto(fontSize: 13, fontWeight: FontWeight.w600)),
+                Text('Importance', style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 8),
                 Row(
                   children: [
@@ -169,8 +169,8 @@ Future<Task?> showEditTaskForm(BuildContext context, Schedule currentSchedule, i
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Progress', style: GoogleFonts.roboto(fontSize: 13, fontWeight: FontWeight.w600)),
-                    Text('${taskProgress}%', style: GoogleFonts.roboto(fontSize: 13, color: Colors.amber, fontWeight: FontWeight.w600)),
+                    Text('Progress', style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600)),
+                    Text('${taskProgress}%', style: GoogleFonts.inter(fontSize: 13, color: Colors.amber, fontWeight: FontWeight.w600)),
                   ],
                 ),
               Slider.adaptive(
@@ -198,7 +198,7 @@ Future<Task?> showEditTaskForm(BuildContext context, Schedule currentSchedule, i
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
             ),
-            child: Text('Cancel', style: GoogleFonts.roboto(color: Colors.grey, fontWeight: FontWeight.w500)),
+            child: Text('Cancel', style: GoogleFonts.inter(color: Colors.grey, fontWeight: FontWeight.w500)),
           ),
           ElevatedButton(
             onPressed: nameController.text.isEmpty ? null : () => Navigator.pop(context, true),
@@ -209,7 +209,7 @@ Future<Task?> showEditTaskForm(BuildContext context, Schedule currentSchedule, i
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
               elevation: 0,
             ),
-            child: Text('Save', style: GoogleFonts.roboto(fontWeight: FontWeight.bold)),
+            child: Text('Save', style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -272,7 +272,7 @@ Future<DateTime?> _showCalendarPicker(BuildContext context, DateTime initialDate
         titlePadding: const EdgeInsets.only(top: 20, left: 24, right: 24),
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         actionsPadding: const EdgeInsets.only(right: 24, bottom: 12),
-        title: Text('Select Deadline', style: GoogleFonts.roboto(fontWeight: FontWeight.bold, fontSize: 18)),
+        title: Text('Select Deadline', style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 18)),
         content: SizedBox(
           width: double.maxFinite,
           child: Column(
@@ -287,23 +287,23 @@ Future<DateTime?> _showCalendarPicker(BuildContext context, DateTime initialDate
                 headerStyle: HeaderStyle(
                   formatButtonVisible: false,
                   titleCentered: true,
-                  titleTextStyle: GoogleFonts.roboto(fontWeight: FontWeight.w600, fontSize: 16),
+                  titleTextStyle: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 16),
                   leftChevronIcon: const Icon(Icons.chevron_left, color: Colors.black54),
                   rightChevronIcon: const Icon(Icons.chevron_right, color: Colors.black54),
                 ),
                 daysOfWeekStyle: DaysOfWeekStyle(
-                  weekdayStyle: GoogleFonts.roboto(color: Colors.grey, fontSize: 12),
-                  weekendStyle: GoogleFonts.roboto(color: Colors.grey, fontSize: 12),
+                  weekdayStyle: GoogleFonts.inter(color: Colors.grey, fontSize: 12),
+                  weekendStyle: GoogleFonts.inter(color: Colors.grey, fontSize: 12),
                 ),
                 calendarStyle: CalendarStyle(
                   outsideDaysVisible: false,
-                  defaultTextStyle: GoogleFonts.roboto(fontSize: 14),
-                  weekendTextStyle: GoogleFonts.roboto(fontSize: 14),
+                  defaultTextStyle: GoogleFonts.inter(fontSize: 14),
+                  weekendTextStyle: GoogleFonts.inter(fontSize: 14),
                   todayDecoration: BoxDecoration(
                     color: Colors.amber.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
-                  todayTextStyle: GoogleFonts.roboto(color: Colors.amber, fontWeight: FontWeight.bold),
+                  todayTextStyle: GoogleFonts.inter(color: Colors.amber, fontWeight: FontWeight.bold),
                   selectedDecoration: const BoxDecoration(
                     color: Colors.amber,
                     shape: BoxShape.circle,
@@ -327,7 +327,7 @@ Future<DateTime?> _showCalendarPicker(BuildContext context, DateTime initialDate
                 child: Text(
                   selectedDay == null ? 'No date selected' : _formatFullDate(selectedDay!),
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.roboto(fontWeight: FontWeight.w500, color: Colors.black87),
+                  style: GoogleFonts.inter(fontWeight: FontWeight.w500, color: Colors.black87),
                 ),
               ),
             ],
@@ -340,7 +340,7 @@ Future<DateTime?> _showCalendarPicker(BuildContext context, DateTime initialDate
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
             ),
-            child: Text('Cancel', style: GoogleFonts.roboto(color: Colors.grey, fontWeight: FontWeight.w500)),
+            child: Text('Cancel', style: GoogleFonts.inter(color: Colors.grey, fontWeight: FontWeight.w500)),
           ),
           ElevatedButton(
             onPressed: selectedDay == null ? null : () => Navigator.pop(context, selectedDay),
@@ -353,7 +353,7 @@ Future<DateTime?> _showCalendarPicker(BuildContext context, DateTime initialDate
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
               elevation: 0,
             ),
-            child: Text('Next', style: GoogleFonts.roboto(fontWeight: FontWeight.bold)),
+            child: Text('Next', style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -383,7 +383,7 @@ Widget _buildImportanceOption({
         child: Center(
           child: Text(
             label,
-            style: GoogleFonts.roboto(
+            style: GoogleFonts.inter(
               fontSize: 12,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
               color: isSelected ? Colors.white : const Color(0xFF64748B),

@@ -24,7 +24,7 @@ class _SettingsPageState extends State<SettingsPage> {
         elevation: 0,
         title: Text(
           'Settings',
-          style: GoogleFonts.roboto(
+          style: GoogleFonts.inter(
             fontSize: 22,
             fontWeight: FontWeight.w700,
             color: const Color(0xFF1A1A2E),
@@ -162,7 +162,7 @@ class _SettingsPageState extends State<SettingsPage> {
     padding: const EdgeInsets.fromLTRB(24, 18, 24, 8),
     child: Text(
       text,
-      style: GoogleFonts.roboto(
+      style: GoogleFonts.inter(
         fontSize: 11,
         fontWeight: FontWeight.w700,
         color: const Color(0xFF9096A2),
@@ -199,7 +199,7 @@ class _SettingsPageState extends State<SettingsPage> {
           Expanded(
             child: Text(
               label,
-              style: GoogleFonts.roboto(
+              style: GoogleFonts.inter(
                 fontSize: 15,
                 color: const Color(0xFF1A1A2E),
               ),
@@ -238,7 +238,7 @@ class _SettingsPageState extends State<SettingsPage> {
             Expanded(
               child: Text(
                 label,
-                style: GoogleFonts.roboto(
+                style: GoogleFonts.inter(
                   fontSize: 15,
                   color: const Color(0xFF1A1A2E),
                 ),
@@ -247,7 +247,7 @@ class _SettingsPageState extends State<SettingsPage> {
             if (value != null) ...[
               Text(
                 value,
-                style: GoogleFonts.roboto(
+                style: GoogleFonts.inter(
                   fontSize: 13,
                   color: const Color(0xFF9096A2),
                 ),

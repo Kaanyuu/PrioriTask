@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:popover/popover.dart';
 import 'models/task.dart';
 import 'views/calendar_page.dart';
 import 'views/tasks_page.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
         scaffoldBackgroundColor: const Color(0xFFF8F9FB),
-        textTheme: GoogleFonts.robotoTextTheme(),
+        textTheme: GoogleFonts.interTextTheme(),
       ),
       home: const MyHomePage(title: 'PrioriTask'),
     );
@@ -190,7 +191,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                       const SizedBox(height: 4),
                       Text(
                         'Tasks',
-                        style: GoogleFonts.roboto(
+                        style: GoogleFonts.inter(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                           color: _selectedIndex == 0
@@ -230,7 +231,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                       const SizedBox(height: 4),
                       Text(
                         'Calendar',
-                        style: GoogleFonts.roboto(
+                        style: GoogleFonts.inter(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                           color: _selectedIndex == 1
@@ -270,7 +271,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                       const SizedBox(height: 4),
                       Text(
                         'Matrix',
-                        style: GoogleFonts.roboto(
+                        style: GoogleFonts.inter(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                           color: _selectedIndex == 2
@@ -310,7 +311,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                       const SizedBox(height: 4),
                       Text(
                         'Settings',
-                        style: GoogleFonts.roboto(
+                        style: GoogleFonts.inter(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                           color: _selectedIndex == 3
