@@ -25,8 +25,8 @@ class Task {
     required this.importance,
     required this.difficulty,
     required this.rawDifficulty,
-    required this.remainingDays,
-    required this.urgency,
+    this.remainingDays = 0,
+    this.urgency = 0,
     this.priority = 0,
     this.risk = false,
     this.eisenLabel = '',
@@ -167,7 +167,15 @@ bool computeIsRisk(int remainingDays, int rawDifficulty) {
 
 // ASSIGN EISENLABEL FOR A TASK
 String assignEisenLabel(int index, int listLength) {
-  if (listLength <= 3) return 'Do'; // IF THERE ARE ONLY 3 TASKS, THEN ALL ARE DO
+  if (listLength == 1) return 'Do'; // 1 Task, 1 Do
+
+  if (listLength == 2) {
+    return index == 0 ? 'Do' : 'Schedule'; // 2 Task, 1 Do, 1 Schedule
+  }
+
+  if (listLength == 3) {
+    return index == 0 ? 'Do' : 'Schedule'; // 3 Task, 1 Do, 2 Schedule
+  }
 
   final doCount = (listLength * 0.25).ceil().clamp(1, listLength); // CALCULATES TOP 25% AND MAKE THEM DO
   final schedCount = (listLength * 0.35).ceil().clamp(1, listLength); // CALCULATE THE NEXT 35% AND MAKE THEM SCHEDULE
@@ -182,6 +190,39 @@ Color getEisenLabelColor(String band) {
     case 'Do':       return Color(0xFFEF4444);
     case 'Schedule': return Color(0xFF6DB3E9);
     default:         return Color(0xFFADA587);
+  }
+}
+
+void loadDefaultTasks(Schedule currentSchedule) {
+  if (currentSchedule.tasks.isEmpty) {
+    final now = DateTime.now();
+
+    currentSchedule.tasks.addAll([
+      Task(
+        name: 'Opinion Essay - English',
+        deadline: now.add(const Duration(days: 5)),
+        description: 'Write a 1500-word opinion essay with a clear thesis and supporting arguments.',
+        importance: normalizeImportance(2),
+        difficulty: normalizeDifficulty(2),
+        rawDifficulty: 2,
+      ),
+      Task(
+        name: 'Thesis Part 1 - Introduction',
+        deadline: now.add(const Duration(days: 14)),
+        description: 'Draft the introduction chapter, including background and problem statement.',
+        importance: normalizeImportance(3),
+        difficulty: normalizeDifficulty(4),
+        rawDifficulty: 4,
+      ),
+      Task(
+        name: 'Reading Assignment - Chapter 3',
+        deadline: now.add(const Duration(days: 3)),
+        description: 'Read chapter 3 and prepare notes for class discussion.',
+        importance: normalizeImportance(1),
+        difficulty: normalizeDifficulty(1),
+        rawDifficulty: 1,
+      ),
+    ]);
   }
 }
 

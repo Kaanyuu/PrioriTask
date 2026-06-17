@@ -51,6 +51,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     super.initState();
     // Adds an observer to react whenever the app resumes in background
     WidgetsBinding.instance.addObserver(this);
+    if (currentSchedule.tasks.isEmpty) {
+      loadDefaultTasks(currentSchedule);
+    }
     recomputeAll(currentSchedule);
   }
 
