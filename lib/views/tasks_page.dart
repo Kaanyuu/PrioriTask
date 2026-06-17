@@ -253,7 +253,7 @@ class _TasksPageState extends State<TasksPage> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFF639922).withValues(alpha: 0.020), // soft green
+        color: const Color(0xFF639922).withValues(alpha: 0.050), // soft green
         borderRadius: BorderRadius.circular(16),
       ),
       alignment: Alignment.centerLeft,
@@ -280,19 +280,20 @@ Widget _buildSwipeBackgroundDelete() {
   return Container(
     margin: const EdgeInsets.symmetric(vertical: 4),
     decoration: BoxDecoration(
-      color: const Color(0xFFF47174).withValues(alpha: 0.020), // soft green
+      color: const Color(0xFFF47174).withValues(alpha: 0.050), // soft green
       borderRadius: BorderRadius.circular(16),
     ),
-    alignment: Alignment.centerLeft,
-    padding: const EdgeInsets.only(left: 24),
+    alignment: Alignment.centerRight,
+    padding: const EdgeInsets.only(right: 24),
     child: Row(
+      mainAxisAlignment: MainAxisAlignment.end,
       children: const [
-        Icon(Icons.check_circle_rounded, color: Color(0xFF3B6D11), size: 26),
+        Icon(Icons.cancel_rounded, color: Color(0xFFF47174), size: 26),
         SizedBox(width: 8),
         Text(
           'Delete',
           style: TextStyle(
-            color: Color(0xFF3B6D11),
+            color: Color(0xFFF47174),
             fontWeight: FontWeight.w500,
             fontSize: 14,
           ),
