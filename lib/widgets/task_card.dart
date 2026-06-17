@@ -5,14 +5,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class TaskCard extends StatefulWidget {
   final Task task;
-  final VoidCallback onDelete;
+  final VoidCallback onEdit;
   final bool isExpanded;
   final VoidCallback onTap;
 
   const TaskCard({
     super.key,
     required this.task,
-    required this.onDelete,
+    required this.onEdit,
     required this.isExpanded,
     required this.onTap,
   });
@@ -81,15 +81,15 @@ class TaskCard extends StatefulWidget {
                       const SizedBox(width: 8),
                       IconButton(
                         icon: SvgPicture.asset(
-                          'assets/trash-2.svg',
+                          'assets/writing.svg',
                           width: 18,
                           height: 20,
                           colorFilter: const ColorFilter.mode(
-                            Colors.redAccent,
+                            Colors.amber,
                             BlendMode.srcIn,
                           ),
                         ),
-                        onPressed: widget.onDelete,
+                        onPressed: widget.onEdit,
                       ),
                     ],
                   ),
@@ -133,7 +133,7 @@ class TaskCard extends StatefulWidget {
                         : (widget.task.importance >= 0.6 ? const Color(0xFFF59E0B) : const Color(0xFF10B981)),
                   ),
                   Text(
-                    widget.task.importance >= 0.9 ? 'High' : (widget.task.importance >= 0.6 ? 'Medium' : 'Low'),
+                    widget.task.importance >= 0.9 ? 'High' : (widget.task.importance >= 0.6 ? 'Mid ' : 'Low'),
                     style: TextStyle(
                       fontSize: 11,
                       color: widget.task.importance >= 0.9
@@ -189,24 +189,27 @@ class TaskCard extends StatefulWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Row(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: Slider.adaptive(
-                            value: widget.task.progress.toDouble(),
-                            min: 0,
-                            max: 100,
-                            divisions: 4,
-                            label: "${widget.task.progress}%",
-                            inactiveColor: Colors.amber.shade300,
-                            activeColor: Colors.amber.shade600,
-                            onChanged: (value) {
-                              setState(() {
-                                widget.task.progress = value.round();
-                              });
-                            },
-                          )
-                        )
+                        const Text(
+                          "Progress:",
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                        Slider.adaptive(
+                          value: widget.task.progress.toDouble(),
+                          min: 0,
+                          max: 100,
+                          divisions: 4,
+                          label: "${widget.task.progress.round()}%",
+                          inactiveColor: Colors.amber.shade300,
+                          activeColor: Colors.amber.shade600,
+                          onChanged: (value) {
+                            setState(() {
+                              widget.task.progress = value.round();
+                            });
+                          },
+                        ),
                       ],
                     ),
                   ],

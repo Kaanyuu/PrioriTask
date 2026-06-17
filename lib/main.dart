@@ -91,6 +91,19 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                   recomputeAll(currentSchedule);
                 });
               },
+              onTaskCompleted: (index) {
+                setState(() {
+                  currentSchedule.tasks.removeAt(index);
+                  recomputeAll(currentSchedule);
+                });
+            },
+              onTaskEdit: (index, updatedTask) {
+                setState(() {
+                  currentSchedule.tasks[index] = updatedTask;
+                  recomputeAll(currentSchedule);
+                });
+                // saveSchedules([currentSchedule]);
+              },
             ),
             CalendarPage(schedule: currentSchedule),
             MatrixPage(schedule: currentSchedule),
