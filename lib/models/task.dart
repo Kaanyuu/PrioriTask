@@ -74,7 +74,7 @@ double normalizeDifficulty(double difficulty) => difficulty / 5.0;
 
 bool checkTieBreak(Task current, List<Task> tasks) {
 
-  // Compute priority FIRST NORMALLY
+  //Compute priority FIRST NORMALLY
   //current.priority = computePriority(current.urgency, current.importance, current.difficulty, false);
 
   // IF TASKS ARE LESS THAN 3 NO NEED FOR TIE BREAK
