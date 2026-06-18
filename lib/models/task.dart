@@ -209,7 +209,7 @@ void loadDefaultTasks(Schedule currentSchedule) {
     currentSchedule.tasks.addAll([
       Task(
         name: 'Opinion Essay - English',
-        deadline: now.add(const Duration(days: 5)),
+        deadline: now.add(const Duration(days: 6)),
         description: 'Write a 1500-word opinion essay with a clear thesis and supporting arguments.',
         importance: normalizeImportance(2),
         difficulty: normalizeDifficulty(2),
@@ -225,7 +225,7 @@ void loadDefaultTasks(Schedule currentSchedule) {
       ),
       Task(
         name: 'Reading Assignment - Chapter 3',
-        deadline: now.add(const Duration(days: 3)),
+        deadline: now.add(const Duration(days: 4)),
         description: 'Read chapter 3 and prepare notes for class discussion.',
         importance: normalizeImportance(1),
         difficulty: normalizeDifficulty(1),
