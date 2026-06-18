@@ -2,12 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'models/task.dart';
+import 'services/hive_services.dart';
 import 'views/calendar_page.dart';
 import 'views/tasks_page.dart';
 import 'views/settings_page.dart';
 import 'widgets/add_task_prompt.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Hive.initFlutter();
+  
+  Hive.registerAdapter(TaskAdapter());
+  await HiveService.openTaskBox();
+
   runApp(const MyApp());
 }
 
@@ -50,9 +59,19 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     super.initState();
     // Adds an observer to react whenever the app resumes in background
     WidgetsBinding.instance.addObserver(this);
-    if (currentSchedule.tasks.isEmpty) {
+    
+    // Load tasks from Hive
+    final savedTasks = HiveService.getTasks();
+    if (savedTasks.isEmpty) {
       loadDefaultTasks(currentSchedule);
+      // Save default tasks to Hive
+      for (var task in currentSchedule.tasks) {
+        HiveService.addTask(task);
+      }
+    } else {
+      currentSchedule.tasks = savedTasks;
     }
+    
     recomputeAll(currentSchedule);
   }
 
@@ -68,7 +87,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // Checks if the app is running
     if (state == AppLifecycleState.resumed) {
-      recomputeAll(currentSchedule);
+      setState(() {
+        recomputeAll(currentSchedule);
+        HiveService.saveAllTasks(currentSchedule.tasks);
+      });
     }
   }
 
@@ -86,20 +108,25 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
               schedule: currentSchedule,
               onTaskDeleted: (index) {
                 setState(() {
-                  currentSchedule.tasks.removeAt(index);
+                  final task = currentSchedule.tasks.removeAt(index);
                   recomputeAll(currentSchedule);
+                  HiveService.deleteTask(task.id);
+                  HiveService.saveAllTasks(currentSchedule.tasks); // Save updated priorities/labels
                 });
               },
               onTaskCompleted: (index) {
                 setState(() {
-                  currentSchedule.tasks.removeAt(index);
+                  final task = currentSchedule.tasks.removeAt(index);
                   recomputeAll(currentSchedule);
+                  HiveService.deleteTask(task.id);
+                  HiveService.saveAllTasks(currentSchedule.tasks);
                 });
             },
               onTaskEdit: (index, updatedTask) {
                 setState(() {
                   currentSchedule.tasks[index] = updatedTask;
                   recomputeAll(currentSchedule);
+                  HiveService.saveAllTasks(currentSchedule.tasks);
                 });
                 // saveSchedules([currentSchedule]);
               },
@@ -138,6 +165,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                 setState(() {
                   currentSchedule.tasks.add(newTask);
                   recomputeAll(currentSchedule);
+                  HiveService.saveAllTasks(currentSchedule.tasks);
                 });
               }
             },

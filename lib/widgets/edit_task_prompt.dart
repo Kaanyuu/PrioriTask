@@ -202,6 +202,7 @@ Future<Task?> showEditTaskForm(BuildContext context, Schedule currentSchedule, i
   double difficultyScore = normalizeDifficulty(taskDifficulty);
 
   Task updated = Task(
+    id: task.id,
     name: nameController.text,
     deadline: taskDeadline,
     description: descriptionController.text,

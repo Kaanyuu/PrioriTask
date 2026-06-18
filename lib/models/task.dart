@@ -1,20 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
+part 'task.g.dart';
+
+@HiveType(typeId: 0)
 class Task {
+  @HiveField(0)
+  final String id;
+
+  @HiveField(1)
   String name;
+  @HiveField(2)
   DateTime deadline;
+  @HiveField(3)
   String description;
+  @HiveField(4)
   double importance;  // 1-3
+  @HiveField(5)
   double difficulty; // 1-5
+  @HiveField(6)
   int rawDifficulty; // For risk calculation
+  @HiveField(7)
   int remainingDays;
+  @HiveField(8)
   double urgency;
+  @HiveField(9)
   double priority;
+  @HiveField(10)
   bool risk; // Risk
+  @HiveField(11)
   String eisenLabel; // Do, Schedule, Backlog
+  @HiveField(12)
   int progress;
 
   Task({
+    required this.id,
     required this.name,
     required this.deadline,
     required this.description,
@@ -192,6 +212,7 @@ void loadDefaultTasks(Schedule currentSchedule) {
   final now = DateTime.now();
   currentSchedule.tasks.addAll([
     Task(
+      id: 'sample-1',
       name: 'Opinion Essay - English',
       deadline: now.add(const Duration(days: 5)),
       description: 'Write a 1500-word opinion essay with a clear thesis.',
@@ -200,6 +221,7 @@ void loadDefaultTasks(Schedule currentSchedule) {
       rawDifficulty: 2,
     ),
     Task(
+      id: 'sample-2',
       name: 'Thesis Part 1 - Introduction',
       deadline: now.add(const Duration(days: 14)),
       description: 'Draft the introduction chapter and background.',
@@ -208,6 +230,7 @@ void loadDefaultTasks(Schedule currentSchedule) {
       rawDifficulty: 4,
     ),
     Task(
+      id: 'sample-3',
       name: 'Reading Assignment - Chapter 3',
       deadline: now.add(const Duration(days: 3)),
       description: 'Read chapter 3 and prepare notes for class.',
@@ -228,3 +251,4 @@ const String importanceInfo =
     'Low — No consequences\n'
     'Medium — Matters, not critical\n'
     'High — Must be done, real consequences';
+
