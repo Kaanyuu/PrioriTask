@@ -1,6 +1,7 @@
 // lib/views/settings_page.dart
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../services/notification_service.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -126,6 +127,56 @@ class _SettingsPageState extends State<SettingsPage> {
                 label: 'Version',
                 value: '1.0.0',
                 onTap: () => _showSnack("You're on the latest version!"),
+              ),
+            ],
+          ),
+          // Notification Demo
+          _sectionLabel('NOTIFICATION DEMO'),
+          _settingsCard(
+            children: [
+              _chevronRow(
+                icon: Icons.notifications_active_rounded,
+                iconColor: const Color(0xFF5B5FEE),
+                iconBg: const Color(0xFFEEF0FF),
+                label: 'Every 6 Hours Notification',
+                onTap: () {
+                  NotificationService.showNotification(
+                    id: 1,
+                    title: "Task Reminder",
+                    body: "Don't forget to DO your Tasks!",
+                  );
+                  _showSnack('Triggered 6-hour notification demo');
+                },
+              ),
+              _divider(),
+              _chevronRow(
+                icon: Icons.today_rounded,
+                iconColor: const Color(0xFF5B5FEE),
+                iconBg: const Color(0xFFEEF0FF),
+                label: 'Everyday Reminder',
+                onTap: () {
+                  NotificationService.showNotification(
+                    id: 2,
+                    title: "Daily Task Overview",
+                    body: "You have 5 tasks to complete today. Start now!",
+                  );
+                  _showSnack('Triggered everyday reminder demo');
+                },
+              ),
+              _divider(),
+              _chevronRow(
+                icon: Icons.warning_amber_rounded,
+                iconColor: const Color(0xFFD32F2F),
+                iconBg: const Color(0xFFFFEBEE),
+                label: 'Overdue Warning',
+                onTap: () {
+                  NotificationService.showNotification(
+                    id: 3,
+                    title: "Overdue Task Warning",
+                    body: "You have Overdue Tasks! Please do or update your tasks!",
+                  );
+                  _showSnack('Triggered overdue warning demo');
+                },
               ),
             ],
           ),

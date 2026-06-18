@@ -15,9 +15,12 @@ class NotificationService {
     await _notificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (details) {
-        // Handle notification tap if needed
       },
     );
+
+    // Request permissions for Android 13+
+    await _notificationsPlugin.resolvePlatformSpecificImplementation
+    <AndroidFlutterLocalNotificationsPlugin>()?.requestNotificationsPermission();
   }
 
   static Future<void> showNotification({
