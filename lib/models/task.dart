@@ -226,4 +226,5 @@ const String difficultyInfo =
     '5★ Project — >2 weeks';
 const String importanceInfo =
     'Low — No consequences\n'
-    'Medium — Matters, not critical\nHigh — Must be done, real consequences';
+    'Medium — Matters, not critical\n'
+    'High — Must be done, real consequences';

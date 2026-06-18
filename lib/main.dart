@@ -5,7 +5,6 @@ import 'models/task.dart';
 import 'views/calendar_page.dart';
 import 'views/tasks_page.dart';
 import 'views/settings_page.dart';
-import 'views/matrix_page.dart';
 import 'widgets/add_task_prompt.dart';
 
 void main() {
@@ -106,7 +105,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
               },
             ),
             CalendarPage(schedule: currentSchedule),
-            MatrixPage(schedule: currentSchedule),
             SettingsPage(),
           ],
         ),
@@ -234,46 +232,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                           color: _selectedIndex == 1
-                              ? const Color(0xFFF59E0B)
-                              : const Color(0xFF64748B),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    _pageController.animateToPage(
-                      2,
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
-                  },
-                  borderRadius: BorderRadius.circular(15),
-                  splashColor: Colors.amber.withValues(alpha: 0.2),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/grid-3x3.svg',
-                        width: 24,
-                        height: 24,
-                        colorFilter: ColorFilter.mode(
-                          _selectedIndex == 2
-                              ? const Color(0xFFF59E0B)
-                              : const Color(0xFF64748B),
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Matrix',
-                        style: GoogleFonts.roboto(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: _selectedIndex == 2
                               ? const Color(0xFFF59E0B)
                               : const Color(0xFF64748B),
                         ),
