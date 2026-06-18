@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'models/task.dart';
 import 'services/hive_services.dart';
+import 'services/notification_service.dart';
 import 'views/calendar_page.dart';
 import 'views/tasks_page.dart';
 import 'views/settings_page.dart';
@@ -16,6 +17,7 @@ Future<void> main() async {
   
   Hive.registerAdapter(TaskAdapter());
   await HiveService.openTaskBox();
+  await NotificationService.init();
 
   runApp(const MyApp());
 }
@@ -272,7 +274,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                 child: InkWell(
                   onTap: () {
                     _pageController.animateToPage(
-                      3,
+                      2,
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut,
                     );
@@ -287,7 +289,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                         width: 24,
                         height: 24,
                         colorFilter: ColorFilter.mode(
-                          _selectedIndex == 3
+                          _selectedIndex == 2
                               ? const Color(0xFFF59E0B)
                               : const Color(0xFF64748B),
                           BlendMode.srcIn,
@@ -299,7 +301,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                         style: GoogleFonts.roboto(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: _selectedIndex == 3
+                          color: _selectedIndex == 2
                               ? const Color(0xFFF59E0B)
                               : const Color(0xFF64748B),
                         ),
