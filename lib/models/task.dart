@@ -73,7 +73,7 @@ double normalizeDifficulty(double difficulty) {
 bool checkTieBreak(Task current, List<Task> tasks) {
 
   // Compute priority FIRST NORMALLY
-  current.priority = computePriority(current.urgency, current.importance, current.difficulty, false);
+  // current.priority = computePriority(current.urgency, current.importance, current.difficulty, false);
 
   // IF TASKS ARE LESS THAN 3 NO NEED FOR TIE BREAK
   if (tasks.length < 3) {
@@ -84,15 +84,11 @@ bool checkTieBreak(Task current, List<Task> tasks) {
   // THEN IT CHECKS IF ITS IMPORTANCE AND URGENCY ARE THE SAME
   for (Task other in tasks) {
     if (other == current) continue;
-
-    if (current.priority == other.priority) {
       if (other.importance == current.importance &&
           other.urgency == current.urgency) {
         return true;
-      }
     }
   }
-
   return false;
 }
 
@@ -118,7 +114,7 @@ void recomputeAll(Schedule schedule) {
   schedule.tasks = selectionSort(schedule.tasks);
   int listLength = schedule.tasks.length;
   for(int i = 0; i < listLength; i++) {
-    schedule.tasks[i].eisenLabel = assignEisenLabel(i, listLength);
+    schedule.tasks[i].eisenLabel = finalEisenLable(i, listLength, schedule.tasks[i]);
   }
 }
 
@@ -192,6 +188,18 @@ Color getEisenLabelColor(String band) {
     case 'Schedule': return Color(0xFF6DB3E9);
     default:         return Color(0xFFADA587);
   }
+}
+
+String finalEisenLable(int index, int total, Task task) {
+  String band = assignEisenLabel(index, total);
+
+  // Mid importance + risk window = promote one band
+  if (task.importance == normalizeImportance(2) && task.risk) {
+    if (band == 'Backlog') return 'Schedule';
+    if (band == 'Schedule') return 'Do';
+  }
+
+  return band;
 }
 
 void loadDefaultTasks(Schedule currentSchedule) {
