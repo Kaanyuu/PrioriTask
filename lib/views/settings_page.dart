@@ -199,7 +199,7 @@ class _SettingsPageState extends State<SettingsPage> {
           Expanded(
             child: Text(
               label,
-              style: GoogleFonts.inter(
+              style: GoogleFonts.roboto(
                 fontSize: 15,
                 color: const Color(0xFF1A1A2E),
               ),
@@ -238,7 +238,7 @@ class _SettingsPageState extends State<SettingsPage> {
             Expanded(
               child: Text(
                 label,
-                style: GoogleFonts.inter(
+                style: GoogleFonts.roboto(
                   fontSize: 15,
                   color: const Color(0xFF1A1A2E),
                 ),
@@ -247,7 +247,7 @@ class _SettingsPageState extends State<SettingsPage> {
             if (value != null) ...[
               Text(
                 value,
-                style: GoogleFonts.inter(
+                style: GoogleFonts.roboto(
                   fontSize: 13,
                   color: const Color(0xFF9096A2),
                 ),

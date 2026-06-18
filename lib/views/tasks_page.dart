@@ -199,7 +199,7 @@ class _TasksPageState extends State<TasksPage> {
                       });
                     },
                   ),
-                  const Text('Don\'t show this again', style: TextStyle(fontSize: 13)),
+                  const Text("Don't show this again", style: TextStyle(fontSize: 13)),
                 ],
               ),
             ],

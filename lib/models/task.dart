@@ -1,24 +1,40 @@
-
-
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
+part 'task.g.dart';
+
+@HiveType(typeId: 0)
 class Task {
+  @HiveField(0)
+  final String id;
+
+  @HiveField(1)
   String name;
+  @HiveField(2)
   DateTime deadline;
+  @HiveField(3)
   String description;
+  @HiveField(4)
   double importance;  // 1-3
+  @HiveField(5)
   double difficulty; // 1-5
+  @HiveField(6)
   int rawDifficulty; // For risk calculation
+  @HiveField(7)
   int remainingDays;
+  @HiveField(8)
   double urgency;
+  @HiveField(9)
   double priority;
+  @HiveField(10)
   bool risk; // Risk
+  @HiveField(11)
   String eisenLabel; // Do, Schedule, Backlog
-  int progress; // progress;
+  @HiveField(12)
+  int progress;
 
   Task({
+    required this.id,
     required this.name,
     required this.deadline,
     required this.description,
@@ -36,19 +52,15 @@ class Task {
 
 class Schedule {
   List<Task> tasks;
-
-  Schedule({
-    List<Task>? tasks,
-  }) : tasks = tasks ?? [];
+  Schedule({List<Task>? tasks}) : tasks = tasks ?? [];
 }
 
-// REMAINING DAYS
+// --- LOGIC FUNCTIONS ---
+
 int computeRemainingDays(DateTime deadline) {
-  final today = DateTime.now();
-  return deadline.difference(today).inDays;
+  return deadline.difference(DateTime.now()).inDays;
 }
 
-// URGENCY
 double computeUrgency(int remainingDays) {
   double urgency = 1 / (remainingDays + 1);
   if (remainingDays <= 4) {
@@ -57,19 +69,9 @@ double computeUrgency(int remainingDays) {
   return urgency;
 }
 
-// IMPORTANCE
-double normalizeImportance(double importance) {
-  double normImportant;
-  return normImportant = importance / 3.0;
-}
+double normalizeImportance(double importance) => importance / 3.0;
+double normalizeDifficulty(double difficulty) => difficulty / 5.0;
 
-// DIFFICULTY
-double normalizeDifficulty(double difficulty) {
-  double normDiff;
-  return normDiff =  difficulty / 5.0;
-}
-
-// TIEBREAK
 bool checkTieBreak(Task current, List<Task> tasks) {
 
   // Compute priority FIRST NORMALLY
@@ -84,11 +86,11 @@ bool checkTieBreak(Task current, List<Task> tasks) {
   // THEN IT CHECKS IF ITS IMPORTANCE AND URGENCY ARE THE SAME
   for (Task other in tasks) {
     if (other == current) continue;
-      if (other.importance == current.importance &&
-          other.urgency == current.urgency) {
+      if (other.importance == current.importance && other.urgency == current.urgency) {
         return true;
+      }
     }
-  }
+
   return false;
 }
 
@@ -113,8 +115,8 @@ void recomputeAll(Schedule schedule) {
   }
   schedule.tasks = selectionSort(schedule.tasks);
   int listLength = schedule.tasks.length;
-  for(int i = 0; i < listLength; i++) {
-    schedule.tasks[i].eisenLabel = finalEisenLable(i, listLength, schedule.tasks[i]);
+  for (int i = 0; i < listLength; i++) {
+    schedule.tasks[i].eisenLabel = finalEisenLabel(i, listLength, schedule.tasks[i]);
   }
 }
 
@@ -131,19 +133,15 @@ List<Task> selectionSort(List<Task> tasks) {
 
       if (pScore2 > pScore1) {
         maxIndex = j;
-      }
-      if (pScore2 == pScore1) {
-        if (sorted[j].importance != sorted[maxIndex].importance) {
-          if (sorted[j].importance > sorted[maxIndex].importance) {
-            maxIndex = j;
-          }
-        } else {
+      } else if (sorted[j].priority == sorted[maxIndex].priority) {
+        if (sorted[j].importance > sorted[maxIndex].importance) {
+          maxIndex = j;
+        } else if (sorted[j].importance == sorted[maxIndex].importance) {
           if (sorted[j].deadline.isBefore(sorted[maxIndex].deadline)) {
             maxIndex = j;
           }
         }
       }
-
     }
     final temp = sorted[i];
     sorted[i] = sorted[maxIndex];
@@ -164,33 +162,40 @@ bool computeIsRisk(int remainingDays, int rawDifficulty) {
 
 // ASSIGN EISENLABEL FOR A TASK
 String assignEisenLabel(int index, int listLength) {
-  if (listLength == 1) return 'Do'; // 1 Task, 1 Do
-
-  if (listLength == 2) {
-    return index == 0 ? 'Do' : 'Schedule'; // 2 Task, 1 Do, 1 Schedule
-  }
-
-  if (listLength == 3) {
-    return index == 0 ? 'Do' : 'Schedule'; // 3 Task, 1 Do, 2 Schedule
-  }
+  if (listLength == 1) return 'Do';
+  if (listLength <= 3) return index == 0 ? 'Do' : 'Schedule';
 
   final doCount = (listLength * 0.25).ceil().clamp(1, listLength); // CALCULATES TOP 25% AND MAKE THEM DO
   final schedCount = (listLength * 0.35).ceil().clamp(1, listLength); // CALCULATE THE NEXT 35% AND MAKE THEM SCHEDULE
 
-  if (index < doCount) return 'Do'; // IF INDEX/RANK IS WITHIN TOP 25%, THEY'RE DO
-  if (index < doCount + schedCount) return 'Schedule'; // IF INDEX/RANK IS WITHIN THE NEXT TOP 35%, THEY'RE SCHEDULE
-  return 'Backlog'; // OTHERWISE, THEY'RE BACKLOG
+  if (index < doCount) return 'Do';
+  if (index < doCount + schedCount) return 'Schedule';
+  return 'Backlog';
 }
 
 Color getEisenLabelColor(String band) {
   switch (band) {
-    case 'Do':       return Color(0xFFEF4444);
-    case 'Schedule': return Color(0xFF6DB3E9);
-    default:         return Color(0xFFADA587);
+    case 'Do': return const Color(0xFFEF4444);
+    case 'Schedule': return const Color(0xFF6DB3E9);
+    default: return const Color(0xFFADA587);
   }
 }
 
-String finalEisenLable(int index, int total, Task task) {
+// --- SHARED HELPERS (Date Formatting) ---
+
+String getWeekday(DateTime date) {
+  return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][date.weekday - 1];
+}
+
+String getMonthName(DateTime date) {
+  return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][date.month - 1];
+}
+
+String formatFullDate(DateTime date) {
+  return "${getWeekday(date)}, ${getMonthName(date)} ${date.day}";
+}
+
+String finalEisenLabel(int index, int total, Task task) {
   String band = assignEisenLabel(index, total);
 
   // Mid importance + risk window = promote one band
@@ -203,50 +208,47 @@ String finalEisenLable(int index, int total, Task task) {
 }
 
 void loadDefaultTasks(Schedule currentSchedule) {
-  if (currentSchedule.tasks.isEmpty) {
-    final now = DateTime.now();
-
-    currentSchedule.tasks.addAll([
-      Task(
-        name: 'Opinion Essay - English',
-        deadline: now.add(const Duration(days: 6)),
-        description: 'Write a 1500-word opinion essay with a clear thesis and supporting arguments.',
-        importance: normalizeImportance(2),
-        difficulty: normalizeDifficulty(2),
-        rawDifficulty: 2,
-      ),
-      Task(
-        name: 'Thesis Part 1 - Introduction',
-        deadline: now.add(const Duration(days: 14)),
-        description: 'Draft the introduction chapter, including background and problem statement.',
-        importance: normalizeImportance(3),
-        difficulty: normalizeDifficulty(4),
-        rawDifficulty: 4,
-      ),
-      Task(
-        name: 'Reading Assignment - Chapter 3',
-        deadline: now.add(const Duration(days: 4)),
-        description: 'Read chapter 3 and prepare notes for class discussion.',
-        importance: normalizeImportance(1),
-        difficulty: normalizeDifficulty(1),
-        rawDifficulty: 1,
-      ),
-    ]);
-  }
+  if (currentSchedule.tasks.isNotEmpty) return;
+  final now = DateTime.now();
+  currentSchedule.tasks.addAll([
+    Task(
+      id: 'sample-1',
+      name: 'Opinion Essay - English',
+      deadline: now.add(const Duration(days: 5)),
+      description: 'Write a 1500-word opinion essay with a clear thesis.',
+      importance: normalizeImportance(2),
+      difficulty: normalizeDifficulty(2),
+      rawDifficulty: 2,
+    ),
+    Task(
+      id: 'sample-2',
+      name: 'Thesis Part 1 - Introduction',
+      deadline: now.add(const Duration(days: 14)),
+      description: 'Draft the introduction chapter and background.',
+      importance: normalizeImportance(3),
+      difficulty: normalizeDifficulty(4),
+      rawDifficulty: 4,
+    ),
+    Task(
+      id: 'sample-3',
+      name: 'Reading Assignment - Chapter 3',
+      deadline: now.add(const Duration(days: 3)),
+      description: 'Read chapter 3 and prepare notes for class.',
+      importance: normalizeImportance(1),
+      difficulty: normalizeDifficulty(1),
+      rawDifficulty: 1,
+    ),
+  ]);
 }
 
-// FOR INFO/TOOL TIP IN ADD TASK PROMPT
 const String difficultyInfo =
-    'You may use these as reference for choosing difficulty:\n'
-    '1★ Assignments — within three days\n'
-    '2★ Short Essays — within five days\n'
-    '3★ Exam Review — within seven days\n'
-    '4★ Performance Task — more than a week\n'
-    '5★ Project — more than two weeks';
-
+    '1★ Assignments — 3 days\n'
+    '2★ Short Essays — 5 days\n'
+    '3★ Exam Review — 7 days\n'
+    '4★ Performance Task — >1 week\n'
+    '5★ Project — >2 weeks';
 const String importanceInfo =
-    'You may use these as reference for choosing importance:\n'
-    'Low — no real consequences if delayed\n'
-    'Medium — matters, but not critical\n'
-    'High — must be done, real consequences';
+    'Low — No consequences\n'
+    'Medium — Matters, not critical\n'
+    'High — Must be done, real consequences';
 

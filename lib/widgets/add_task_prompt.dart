@@ -3,7 +3,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:popover/popover.dart';
 import '../models/task.dart';
 
 Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) async {
@@ -404,7 +403,8 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
     double importanceScore = normalizeImportance(taskImportance);
     double difficultyScore = normalizeDifficulty(taskDifficulty);
 
-    Task current = Task(
+    final task = Task(
+      id: DateTime.now().microsecondsSinceEpoch.toString(),
       name: nameController.text,
       deadline: taskDeadline,
       description: descriptionController.text,
@@ -416,23 +416,18 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
       progress: 0,
     );
 
-    bool tieBrake = checkTieBreak(current, currentSchedule.tasks);
-    double priorityScore = computePriority(urgencyScore, importanceScore, difficultyScore, tieBrake);
-    bool riskStatus = computeIsRisk(remainingDays, rawDifficulty);
+    bool tieBreak = checkTieBreak(task, currentSchedule.tasks);
 
-    return Task(
-      name: nameController.text,
-      deadline: taskDeadline,
-      description: descriptionController.text,
-      importance: importanceScore,
-      difficulty: difficultyScore,
-      rawDifficulty: rawDifficulty,
-      remainingDays: remainingDays,
-      urgency: urgencyScore,
-      priority: priorityScore,
-      risk: riskStatus,
-      progress: 0,
+    task.priority = computePriority(
+      urgencyScore,
+      importanceScore,
+      difficultyScore,
+      tieBreak,
     );
+
+    task.risk = computeIsRisk(remainingDays, rawDifficulty);
+
+    return task;
   }
   return null;
 }
