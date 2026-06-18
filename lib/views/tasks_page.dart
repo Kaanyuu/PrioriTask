@@ -168,80 +168,122 @@ class _TasksPageState extends State<TasksPage> {
 
     );
   }
-
-  // CONFIRM COMPLETE (DON'T CHANGE)
-  bool dontShowAgainComplete = false;
+// Confirm Complete Prompt
   Future<bool> _confirmComplete(BuildContext context, Task task) async {
-    if (dontShowAgainComplete) {
-      return true; // skip dialog entirely if user opted out
-    }
-
-    bool tempDontShow = false;
-
     final result = await showDialog<bool>(
       context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setDialogState) => AlertDialog(
-          title: const Text('Mark as complete?'),
-          content: Column(
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        titlePadding: const EdgeInsets.only(top: 24, left: 24, right: 24, bottom: 12),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+        actionsPadding: const EdgeInsets.only(right: 24, bottom: 16),
+        title: Text(
+          'Mark as complete?',
+          style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 18),
+        ),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Complete "${task.name}"?'),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Checkbox(
-                    value: tempDontShow,
-                    onChanged: (value) {
-                      setDialogState(() {
-                        tempDontShow = value ?? false;
-                      });
-                    },
-                  ),
-                  const Text("Don't show this again", style: TextStyle(fontSize: 13)),
-                ],
+              Text(
+                'Complete "${task.name}"?',
+                style: GoogleFonts.inter(fontSize: 14, color: Colors.black87),
               ),
+              const SizedBox(height: 12),
             ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Complete'),
-            ),
-          ],
         ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+            ),
+            child: Text(
+              'Cancel',
+              style: GoogleFonts.inter(color: Colors.grey, fontWeight: FontWeight.w500),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.amber,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+              elevation: 0,
+            ),
+            child: Text(
+              'Complete',
+              style: GoogleFonts.inter(fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
       ),
     );
-
-    if (result == true && tempDontShow) {
-      setState(() {
-        dontShowAgainComplete = true;
-      });
-    }
 
     return result ?? false;
   }
 
-  // CONFIRM DELETE (DON'T CHANGE)
+  // Confirm Delete Prompt
   Future<bool> _confirmDelete(BuildContext context, Task task) async {
     final result = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete task?'),
-        content: Text('Delete "${task.name}"? This cannot be undone.'),
+        backgroundColor: Colors.white,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        titlePadding: const EdgeInsets.only(top: 24, left: 24, right: 24, bottom: 12),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+        actionsPadding: const EdgeInsets.only(right: 24, bottom: 16),
+        title: Text(
+          'Delete task?',
+          style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 18),
+        ),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Delete "${task.name}"? This cannot be undone.',
+                style: GoogleFonts.inter(fontSize: 14, color: Colors.black87),
+              ),
+              const SizedBox(height: 12),
+            ],
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+            ),
+            child: Text(
+              'Cancel',
+              style: GoogleFonts.inter(color: Colors.grey, fontWeight: FontWeight.w500),
+            ),
           ),
-          TextButton(
+          ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFEF4444),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+              elevation: 0,
+            ),
+            child: Text(
+              'Delete',
+              style: GoogleFonts.inter(fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),

@@ -107,26 +107,28 @@ Future<Task?> showEditTaskForm(BuildContext context, Schedule currentSchedule, i
                 // DIFFICULTY
                 Text('Difficulty', style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 4),
-                RatingBar.builder(
-                  initialRating: taskDifficulty,
-                  minRating: 1,
-                  maxRating: 5,
-                  allowHalfRating: false,
-                  itemCount: 5,
-                  itemSize: 30,
-                  itemPadding: const EdgeInsets.symmetric(horizontal: 4),
-                  itemBuilder: (context, _) => SvgPicture.asset(
-                    'assets/star.svg',
-                    colorFilter: const ColorFilter.mode(
-                      Colors.amber,
-                      BlendMode.srcIn,
+                Center(
+                  child: RatingBar.builder(
+                    initialRating: taskDifficulty,
+                    minRating: 1,
+                    maxRating: 5,
+                    allowHalfRating: false,
+                    itemCount: 5,
+                    itemSize: 30,
+                    itemPadding: const EdgeInsets.symmetric(horizontal: 4),
+                    itemBuilder: (context, _) => SvgPicture.asset(
+                      'assets/star.svg',
+                      colorFilter: const ColorFilter.mode(
+                        Colors.amber,
+                        BlendMode.srcIn,
+                      ),
                     ),
+                    onRatingUpdate: (rating) {
+                      setDialogState(() {
+                        taskDifficulty = rating;
+                      });
+                    },
                   ),
-                  onRatingUpdate: (rating) {
-                    setDialogState(() {
-                      taskDifficulty = rating;
-                    });
-                  },
                 ),
                 const SizedBox(height: 16),
 
