@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import '../models/task.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:popover/popover.dart';
-import '../views/tasks_page.dart';
 
 class TaskCard extends StatefulWidget {
   final Task task;
@@ -27,10 +25,18 @@ class TaskCard extends StatefulWidget {
   State<TaskCard> createState() => _TaskCardState();
 }
 
-  class _TaskCardState extends State<TaskCard> {
-
+class _TaskCardState extends State<TaskCard> {
   @override
-  Widget build(BuildContext context) => Card(
+  Widget build(BuildContext context) {
+    // Standardize importance styling for reuse in the row
+    final isHigh = widget.task.importance >= 0.9;
+    final isMid = widget.task.importance >= 0.6;
+    final importanceColor = isHigh
+        ? const Color(0xFFEF4444)
+        : (isMid ? const Color(0xFFF59E0B) : const Color(0xFF10B981));
+    final importanceText = isHigh ? 'High' : (isMid ? 'Mid ' : 'Low');
+
+    return Card(
       color: Colors.white,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       elevation: widget.isExpanded ? 4 : 1,
@@ -64,15 +70,11 @@ class TaskCard extends StatefulWidget {
                   ),
                   Row(
                     children: [
-                      // EISENLABLE BADGE
+                      // EISENLABEL BADGE
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: widget.task.eisenLabel == 'Do'
-                              ? const Color(0xFFEF4444) // Rose
-                              : (widget.task.eisenLabel == 'Schedule'
-                                  ? const Color(0xFF6DB3E9)
-                                  : const Color(0xFFADA587)),
+                          color: getEisenLabelColor(widget.task.eisenLabel),
                           borderRadius: BorderRadius.circular(30),
                         ),
                         child: Text(
@@ -134,17 +136,13 @@ class TaskCard extends StatefulWidget {
                   Icon(
                     Icons.priority_high,
                     size: 14,
-                    color: widget.task.importance >= 0.9
-                        ? const Color(0xFFEF4444)
-                        : (widget.task.importance >= 0.6 ? const Color(0xFFF59E0B) : const Color(0xFF10B981)),
+                    color: importanceColor,
                   ),
                   Text(
-                    widget.task.importance >= 0.9 ? 'High' : (widget.task.importance >= 0.6 ? 'Mid ' : 'Low'),
+                    importanceText,
                     style: TextStyle(
                       fontSize: 11,
-                      color: widget.task.importance >= 0.9
-                          ? const Color(0xFFEF4444)
-                          : (widget.task.importance >= 0.6 ? const Color(0xFFF59E0B) : const Color(0xFF10B981)),
+                      color: importanceColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -158,7 +156,7 @@ class TaskCard extends StatefulWidget {
                       value: widget.task.progress / 100,
                       strokeWidth: 3,
                       backgroundColor: Colors.grey.shade300,
-                      valueColor: AlwaysStoppedAnimation<Color>(
+                      valueColor: const AlwaysStoppedAnimation<Color>(
                         Colors.amber,
                       ),
                     ),
@@ -166,10 +164,9 @@ class TaskCard extends StatefulWidget {
                   Text(
                     " ${widget.task.progress}%",
                     style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.blueGrey,
-                      fontWeight: FontWeight.bold
-                    ),
+                        fontSize: 12,
+                        color: Colors.blueGrey,
+                        fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(width: 30),
                 ],
@@ -199,9 +196,7 @@ class TaskCard extends StatefulWidget {
                             : widget.task.description,
                         style: TextStyle(
                           fontSize: 14,
-                          color: widget.task.description.isEmpty
-                              ? Colors.grey
-                              : Colors.black87,
+                          color: widget.task.description.isEmpty ? Colors.grey : Colors.black87,
                           fontStyle: widget.task.description.isEmpty
                               ? FontStyle.italic
                               : FontStyle.normal,
@@ -233,16 +228,13 @@ class TaskCard extends StatefulWidget {
                             if (value.round() == 100) {
                               final confirmed = await _confirmComplete(context, widget.task);
                               if (confirmed) {
-                                setState(() {
-                                  widget.onTaskCompleted(widget.index);
-                                });
-                              }
-                              else {
+                                widget.onTaskCompleted(widget.index);
+                              } else {
                                 setState(() {
                                   widget.task.progress = 75;
                                 });
-                              };
-                            };
+                              }
+                            }
                           },
                         ),
                       ],
@@ -275,7 +267,7 @@ class TaskCard extends StatefulWidget {
                             icon: Icons.computer_rounded,
                             iconColor: Colors.red,
                             label: 'P-Value',
-                            value: '${widget.task.priority.toStringAsFixed(3)}',
+                            value: widget.task.priority.toStringAsFixed(3),
                             backgroundColor: Colors.white,
                           ),
                         ),
@@ -291,6 +283,7 @@ class TaskCard extends StatefulWidget {
         ),
       ),
     );
+  }
 
   // CONFIRM COMPLETE (DON'T CHANGE)
   bool dontShowAgainComplete = false;
@@ -322,7 +315,7 @@ class TaskCard extends StatefulWidget {
                       });
                     },
                   ),
-                  const Text('Don\'t show this again', style: TextStyle(fontSize: 13)),
+                  const Text("Don't show this again", style: TextStyle(fontSize: 13)),
                 ],
               ),
             ],
@@ -403,5 +396,3 @@ Widget _buildMetricCard({
     ),
   );
 }
-
-

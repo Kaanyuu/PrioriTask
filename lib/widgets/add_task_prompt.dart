@@ -3,7 +3,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:popover/popover.dart';
 import '../models/task.dart';
 
 Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) async {

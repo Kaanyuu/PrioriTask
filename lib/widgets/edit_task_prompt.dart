@@ -164,29 +164,6 @@ Future<Task?> showEditTaskForm(BuildContext context, Schedule currentSchedule, i
                   ],
                 ),
                 const SizedBox(height: 16),
-
-                // PROGRESS
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Progress', style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600)),
-                    Text('${taskProgress}%', style: GoogleFonts.inter(fontSize: 13, color: Colors.amber, fontWeight: FontWeight.w600)),
-                  ],
-                ),
-              Slider.adaptive(
-                value: taskProgress.toDouble(),
-                min: 0,
-                max: 100,
-                divisions: 4,
-                label: "${taskProgress}%",
-                inactiveColor: Colors.amber.shade300,
-                activeColor: Colors.amber.shade600,
-                onChanged: (value) {
-                  setDialogState(() {
-                    taskProgress = value.toInt();
-                  });
-                } ,
-              ),
             ],
             ),
           ),
