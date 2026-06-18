@@ -214,7 +214,7 @@ void loadDefaultTasks(Schedule currentSchedule) {
     Task(
       id: 'sample-1',
       name: 'Opinion Essay - English',
-      deadline: now.add(const Duration(days: 5)),
+      deadline: now.add(const Duration(days: 11)),
       description: 'Write a 1500-word opinion essay with a clear thesis.',
       importance: normalizeImportance(2),
       difficulty: normalizeDifficulty(2),
@@ -250,7 +250,7 @@ void loadDefaultTasks(Schedule currentSchedule) {
     Task(
       id: 'sample-5',
       name: 'Biology Lab Report',
-      deadline: now.add(const Duration(days: 4)),
+      deadline: now.add(const Duration(days: 8)),
       description: 'Analyze data from the photosynthesis experiment.',
       importance: normalizeImportance(2),
       difficulty: normalizeDifficulty(3),
@@ -286,7 +286,7 @@ void loadDefaultTasks(Schedule currentSchedule) {
     Task(
       id: 'sample-9',
       name: 'App Dev - UI Bug Fixes',
-      deadline: now.add(const Duration(days: 3)),
+      deadline: now.add(const Duration(days: 13)),
       description: 'Fix the layout issues on the settings page.',
       importance: normalizeImportance(2),
       difficulty: normalizeDifficulty(4),
