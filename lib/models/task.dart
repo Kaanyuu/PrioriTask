@@ -62,11 +62,8 @@ int computeRemainingDays(DateTime deadline) {
 }
 
 double computeUrgency(int remainingDays) {
-  double urgency = 1 / (remainingDays + 1);
-  if (remainingDays <= 4) {
-    urgency = urgency < 0.200 ? 0.200 : urgency;
-  }
-  return urgency;
+  if (remainingDays <= 0) return 1.0;
+  return 1 / (remainingDays + 1);
 }
 
 double normalizeImportance(double importance) => importance / 3.0;
