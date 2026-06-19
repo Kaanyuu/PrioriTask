@@ -72,34 +72,9 @@ double computeUrgency(int remainingDays) {
 double normalizeImportance(double importance) => importance / 3.0;
 double normalizeDifficulty(double difficulty) => difficulty / 5.0;
 
-bool checkTieBreak(Task current, List<Task> tasks) {
-
-  // Compute priority FIRST NORMALLY
-  // current.priority = computePriority(current.urgency, current.importance, current.difficulty, false);
-
-  // IF TASKS ARE LESS THAN 3 NO NEED FOR TIE BREAK
-  if (tasks.length < 3) {
-    return false;
-  }
-
-  // CHECKS ALL TASKS AND FIND A MATCH IN PRIORITY SCORE,
-  // THEN IT CHECKS IF ITS IMPORTANCE AND URGENCY ARE THE SAME
-  for (Task other in tasks) {
-    if (other == current) continue;
-      if (other.importance == current.importance && other.urgency == current.urgency) {
-        return true;
-      }
-    }
-
-  return false;
-}
-
 // PRIORITY
-double computePriority(double urgency, double importance, double difficulty, bool isTiebreak) {
-  if (isTiebreak) {
-    return (0.45 * importance) + (0.40 * urgency) - (0.15 * difficulty);
-  }
-  return (0.45 * importance) + (0.40 * urgency) + (0.15 * difficulty);
+double computePriority(double urgency, double importance, double difficulty) {
+  return (0.50 * importance) + (0.45 * urgency) + (0.05 * difficulty);
 }
 
 // RECOMPUTE THE PRIORITY SCORE EVERY CHANGE!
@@ -110,8 +85,7 @@ void recomputeAll(Schedule schedule) {
     task.risk = computeIsRisk(task.remainingDays, task.rawDifficulty);
   }
   for (Task task in schedule.tasks) {
-    bool tiebreak = checkTieBreak(task, schedule.tasks);
-    task.priority = computePriority(task.urgency, task.importance, task.difficulty, tiebreak);
+    task.priority = computePriority(task.urgency, task.importance, task.difficulty);
   }
   schedule.tasks = selectionSort(schedule.tasks);
   int listLength = schedule.tasks.length;
@@ -128,19 +102,8 @@ List<Task> selectionSort(List<Task> tasks) {
     int maxIndex = i;
 
     for (int j = i + 1; j < sorted.length; j++) {
-      double pScore2 = sorted[j].priority;
-      double pScore1 = sorted[maxIndex].priority;
-
-      if (pScore2 > pScore1) {
+      if (compareTasks(sorted[j], sorted[maxIndex]) < 0) {
         maxIndex = j;
-      } else if (sorted[j].priority == sorted[maxIndex].priority) {
-        if (sorted[j].importance > sorted[maxIndex].importance) {
-          maxIndex = j;
-        } else if (sorted[j].importance == sorted[maxIndex].importance) {
-          if (sorted[j].deadline.isBefore(sorted[maxIndex].deadline)) {
-            maxIndex = j;
-          }
-        }
       }
     }
     final temp = sorted[i];
@@ -148,6 +111,22 @@ List<Task> selectionSort(List<Task> tasks) {
     sorted[maxIndex] = temp;
   }
   return sorted;
+}
+
+// COMPARE TASKS TO REORDER
+int compareTasks(Task a, Task b) {
+  // Normal case — higher score wins
+  if (a.priority != b.priority) {
+    return b.priority.compareTo(a.priority); // descending
+  }
+
+  // Fallback — coincidental score tie, different importance/urgency combo
+  if (a.importance != b.importance) {
+    return b.importance.compareTo(a.importance); // higher importance wins
+  }
+
+  // Final fallback — closer deadline wins
+  return a.deadline.compareTo(b.deadline);
 }
 
 // RISK
@@ -201,7 +180,6 @@ String finalEisenLabel(int index, int total, Task task) {
   // Mid importance + risk window = promote one band
   if (task.importance == normalizeImportance(2) && task.risk) {
     if (band == 'Backlog') return 'Schedule';
-    if (band == 'Schedule') return 'Do';
   }
 
   return band;
@@ -211,103 +189,123 @@ void loadDefaultTasks(Schedule currentSchedule) {
   if (currentSchedule.tasks.isNotEmpty) return;
   final now = DateTime.now();
   currentSchedule.tasks.addAll([
+    // TRUE TIE PAIR — same importance (Mid), same deadline → same urgency
+    // Different difficulty. Easier (1★) should rank above harder (4★) ONLY relative to each other.
     Task(
       id: 'sample-1',
-      name: 'Opinion Essay - English',
-      deadline: now.add(const Duration(days: 11)),
-      description: 'Write a 1500-word opinion essay with a clear thesis.',
+      name: 'Tie Test A - Easy Mid',
+      deadline: now.add(const Duration(days: 10)),
+      description: 'Same importance and deadline as Tie Test B, but easier.',
       importance: normalizeImportance(2),
-      difficulty: normalizeDifficulty(2),
-      rawDifficulty: 2,
-    ),
-    Task(
-      id: 'sample-2',
-      name: 'Thesis Part 1 - Introduction',
-      deadline: now.add(const Duration(days: 14)),
-      description: 'Draft the introduction chapter and background.',
-      importance: normalizeImportance(3),
-      difficulty: normalizeDifficulty(4),
-      rawDifficulty: 4,
-    ),
-    Task(
-      id: 'sample-3',
-      name: 'Reading Assignment - Chapter 3',
-      deadline: now.add(const Duration(days: 3)),
-      description: 'Read chapter 3 and prepare notes for class.',
-      importance: normalizeImportance(1),
       difficulty: normalizeDifficulty(1),
       rawDifficulty: 1,
     ),
     Task(
-      id: 'sample-4',
-      name: 'Math Problem Set - Calculus',
-      deadline: now.add(const Duration(days: 2)),
-      description: 'Solve problems 1-20 from the derivatives chapter.',
+      id: 'sample-2',
+      name: 'Tie Test B - Hard Mid',
+      deadline: now.add(const Duration(days: 10)),
+      description: 'Same importance and deadline as Tie Test A, but harder.',
+      importance: normalizeImportance(2),
+      difficulty: normalizeDifficulty(4),
+      rawDifficulty: 4,
+    ),
+
+    // CONTROL TASK — High importance, should outrank both tie tasks above
+    // regardless of the tiebreak resolving between A and B.
+    Task(
+      id: 'sample-3',
+      name: 'Control - High Importance Anchor',
+      deadline: now.add(const Duration(days: 12)),
+      description: 'Should stay above both tie test tasks if the bug is fixed.',
       importance: normalizeImportance(3),
+      difficulty: normalizeDifficulty(2),
+      rawDifficulty: 2,
+    ),
+
+    // CLOSE-SCORE NON-TIE — different importance AND different urgency,
+    // but might land close in score. Should NOT trigger tiebreak.
+    Task(
+      id: 'sample-4',
+      name: 'Close Score - Low Imp, Closer Deadline',
+      deadline: now.add(const Duration(days: 4)),
+      description: 'Different importance and urgency from everything else.',
+      importance: normalizeImportance(1),
       difficulty: normalizeDifficulty(3),
       rawDifficulty: 3,
     ),
+
+    // MID + RISK PROMOTION TEST — Mid importance, inside its risk window
+    // Should auto-promote one band regardless of raw score.
     Task(
       id: 'sample-5',
-      name: 'Biology Lab Report',
-      deadline: now.add(const Duration(days: 8)),
-      description: 'Analyze data from the photosynthesis experiment.',
+      name: 'Mid Risk Promotion Test',
+      deadline: now.add(const Duration(days: 2)),
+      description: 'Mid importance, difficulty 3 (7-day buffer) — should be risky and promoted.',
       importance: normalizeImportance(2),
       difficulty: normalizeDifficulty(3),
       rawDifficulty: 3,
     ),
+
+    // OVERDUE TEST
     Task(
       id: 'sample-6',
-      name: 'History Quiz Prep',
-      deadline: now.add(const Duration(days: 1)),
-      description: 'Review notes on World War II for tomorrow\'s quiz.',
-      importance: normalizeImportance(1),
+      name: 'Overdue Test Task',
+      deadline: now.subtract(const Duration(days: 1)),
+      description: 'Deadline already passed — should show as overdue.',
+      importance: normalizeImportance(2),
       difficulty: normalizeDifficulty(2),
       rawDifficulty: 2,
     ),
+
+    // FAR + EASY + LOW — should sit comfortably in Backlog
     Task(
       id: 'sample-7',
-      name: 'Capstone Project - Final Doc',
-      deadline: now.add(const Duration(days: 21)),
-      description: 'Submit the final documentation for the major project.',
+      name: 'Low Priority Filler',
+      deadline: now.add(const Duration(days: 30)),
+      description: 'Low importance, easy, far deadline — true backlog material.',
+      importance: normalizeImportance(1),
+      difficulty: normalizeDifficulty(1),
+      rawDifficulty: 1,
+    ),
+
+    // FAR + HARD + HIGH — tests effective urgency pull from difficulty
+    Task(
+      id: 'sample-8',
+      name: 'Far But Hard Capstone',
+      deadline: now.add(const Duration(days: 20)),
+      description: 'High importance, very hard, far deadline.',
       importance: normalizeImportance(3),
       difficulty: normalizeDifficulty(5),
       rawDifficulty: 5,
     ),
-    Task(
-      id: 'sample-8',
-      name: 'Weekly Learning Journal',
-      deadline: now.add(const Duration(days: 6)),
-      description: 'Summarize key takeaways from this week\'s lectures.',
-      importance: normalizeImportance(1),
-      difficulty: normalizeDifficulty(1),
-      rawDifficulty: 1,
-    ),
+
+    // SECOND TRUE TIE PAIR — different importance tier (High) to verify
+    // tiebreak logic generalizes beyond Mid tasks
     Task(
       id: 'sample-9',
-      name: 'App Dev - UI Bug Fixes',
-      deadline: now.add(const Duration(days: 13)),
-      description: 'Fix the layout issues on the settings page.',
-      importance: normalizeImportance(2),
-      difficulty: normalizeDifficulty(4),
-      rawDifficulty: 4,
+      name: 'Tie Test C - Easy High',
+      deadline: now.add(const Duration(days: 6)),
+      description: 'High importance, same deadline as Tie Test D, easier.',
+      importance: normalizeImportance(3),
+      difficulty: normalizeDifficulty(2),
+      rawDifficulty: 2,
     ),
     Task(
       id: 'sample-10',
-      name: 'Chemistry Flashcards',
-      deadline: now.add(const Duration(days: 7)),
-      description: 'Create flashcards for the periodic table elements.',
-      importance: normalizeImportance(2),
-      difficulty: normalizeDifficulty(2),
-      rawDifficulty: 2,
+      name: 'Tie Test D - Hard High',
+      deadline: now.add(const Duration(days: 6)),
+      description: 'High importance, same deadline as Tie Test C, harder.',
+      importance: normalizeImportance(3),
+      difficulty: normalizeDifficulty(5),
+      rawDifficulty: 5,
     ),
   ]);
 }
 
 const String difficultyInfo =
-    '1★ Assignments — 3 days\n'
-    '2★ Short Essays — 5 days\n'
-    '3★ Exam Review — 7 days\n'
+    '1★ Assignments — 2 days\n'
+    '2★ Short Essays — 4 days\n'
+    '3★ Exam Review — 6 days\n'
     '4★ Performance Task — >1 week\n'
     '5★ Project — >2 weeks';
 const String importanceInfo =

@@ -71,6 +71,40 @@ class _TaskCardState extends State<TaskCard> {
                   Row(
                     children: [
                       // EISENLABEL BADGE
+                      if (widget.task.risk) ...[
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.redAccent,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Icon(
+                          Icons.warning_amber_rounded,
+                          color: Colors.yellow,
+                          weight: 400.0,
+                          size: 12,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      ],
+                      if (widget.task.remainingDays < 0) ...[
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade500,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Text(
+                            "Overdue",
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                      ],
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(

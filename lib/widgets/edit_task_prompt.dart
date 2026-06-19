@@ -216,8 +216,7 @@ Future<Task?> showEditTaskForm(BuildContext context, Schedule currentSchedule, i
     progress: taskProgress,
   );
 
-  bool tieBreak = checkTieBreak(updated, currentSchedule.tasks);
-  updated.priority = computePriority(urgencyScore, importanceScore, difficultyScore, tieBreak);
+  updated.priority = computePriority(urgencyScore, importanceScore, difficultyScore);
   updated.risk = computeIsRisk(remainingDays, rawDifficulty);
 
   return updated;

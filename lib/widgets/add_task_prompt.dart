@@ -416,13 +416,10 @@ Future<Task?> showAddTaskPrompt(BuildContext context, Schedule currentSchedule) 
       progress: 0,
     );
 
-    bool tieBreak = checkTieBreak(task, currentSchedule.tasks);
-
     task.priority = computePriority(
       urgencyScore,
       importanceScore,
       difficultyScore,
-      tieBreak,
     );
 
     task.risk = computeIsRisk(remainingDays, rawDifficulty);
